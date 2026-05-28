@@ -1,100 +1,201 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { HiX } from "react-icons/hi";
+import { FiShield, FiCheck } from "react-icons/fi";
+
 import { Input, Textarea } from "../../ReusableInputs";
 import { editRole } from "../../../features/actions/role";
+import { getAllPermissions } from "../../../features/actions/permission";
 import { Spinner } from "../../Loader/Spinner";
 
-export const EditRoleModal = ({ isOpen, onClose, role }) => {
-  if (!isOpen) return null;
+export const EditRoleModal = ({
+  isOpen,
+  onClose,
+  role,
+}) => {
   const dispatch = useDispatch();
+  console.log(role)
+
   const { roleLoading } = useSelector((state) => state.role);
+
+    const { permissionData } = useSelector(
+    (state) => state.permission,
+  );
+
+    const data =
+    (Array.isArray(permissionData?.data) && permissionData?.data) || [];
 
   const {
     register,
     handleSubmit,
+     reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: role?.name,
-      description: role?.description,
+      name: role?.name || "",
+      permissions: role?.permissions?.map((p) => p?.name) || [],
     },
   });
 
+  useEffect(() => {
+  if (role && isOpen) {
+    reset({
+      name: role?.name || "",
+      permissions:
+        role?.permissions?.map((p) => p?.name) || [],
+    });
+  }
+}, [role, isOpen, reset]);
+
+  useEffect(() => {
+    if (isOpen) {
+      dispatch(getAllPermissions({ per_page: 1000 }));
+    }
+  }, [dispatch, isOpen, role]);
+
   const onSubmit = (data) => {
-    dispatch(editRole({ payload: data, id: role?.id }))
+    dispatch(
+      editRole({
+        payload: data,
+        id: role?.id,
+      }),
+    )
       .unwrap()
       .then(() => {
         onClose();
       });
   };
 
+  if (!isOpen) return null;
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50"
-    >
-      <div
-        className="
-          bg-[#f9f7f7]
-          w-[95%] sm:w-[600px]   /* wider modal */
-          max-h-[85vh]
-          rounded-xl shadow-xl relative
-          flex flex-col
-        "
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
       >
-        {/* CLOSE */}
-        <button
-          type="button"
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
-          onClick={onClose}
-        >
-          <HiX size={26} />
-        </button>
+        {/* ================= HEADER ================= */}
+        <div className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
+          <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-white/10 blur-3xl"></div>
 
-        {/* HEADER */}
-        <div className="px-8 pt-8">
-          <h2 className="text-center text-black text-xl font-semibold mb-6">
-            Edit Role Details
-          </h2>
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white backdrop-blur-md">
+                <FiShield size={26} />
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold text-white">
+                  Edit Role
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-300">
+                  Update role details and permissions
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
+            >
+              <HiX size={24} />
+            </button>
+          </div>
         </div>
 
-        {/* FORM BODY */}
-        <div className="flex-1 overflow-y-auto px-8 pb-6">
-          <Input
-            label="Name"
-            name="name"
-            register={register}
-            required
-            errors={errors}
-          />
-          <Textarea
-            label="Description"
-            name="description"
-            placeholder="Write description ..."
-            register={register}
-            required
-            errors={errors}
-          />
+        {/* ================= BODY ================= */}
+        <div className="flex-1 overflow-y-auto bg-[#f8fafc] p-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {/* LEFT */}
+            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h3 className="mb-6 text-lg font-semibold text-gray-800">
+                Role Information
+              </h3>
+
+              <div className="space-y-5">
+                <Input
+                  label="Role Name"
+                  name="name"
+                  placeholder="Enter role name"
+                  register={register}
+                  required
+                  errors={errors}
+                />
+
+              </div>
+            </div>
+
+            {/* RIGHT */}
+            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Permissions
+                  </h3>
+
+                  <p className="mt-1 text-sm text-gray-500">
+                    Update permissions for this role
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-600">
+                  {data?.length || 0} Permissions
+                </div>
+              </div>
+
+              <div className="grid max-h-[420px] grid-cols-1 gap-3 overflow-y-auto pr-2 sm:grid-cols-2">
+                {data?.map((permission) => (
+                  <label
+                    key={permission?.id}
+                    className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4 transition-all duration-300 hover:border-indigo-200 hover:bg-indigo-50"
+                  >
+                    <input
+                      type="checkbox"
+                      value={permission?.name}
+                      {...register("permissions")}
+                      className="peer hidden"
+                    />
+
+                    <div className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-gray-300 bg-white transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-500">
+                      <FiCheck className="hidden text-sm text-white peer-checked:block" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-medium capitalize text-gray-700">
+                        {permission?.name}
+                      </p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* FOOTER */}
-        <div className="px-8 py-6 border-t border-gray-300">
-          <button
-            disabled={roleLoading}
-            type="submit"
-            className="
-              w-full py-2.5 rounded-lg font-semibold
-              bg-gradient-to-r from-blue-700 to-blue-900
-              hover:from-blue-600 hover:to-blue-800
-              text-white transition
-            "
-          >
-            {roleLoading ? <Spinner /> : "Submit"}
-          </button>
+        {/* ================= FOOTER ================= */}
+        <div className="border-t border-gray-200 bg-white px-8 py-5">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-2xl border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+
+            <button
+              disabled={roleLoading}
+              type="submit"
+              className="flex min-w-[180px] items-center justify-center rounded-2xl bg-gradient-to-r from-[#79BF28] to-[#5ea51f] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl"
+            >
+              {roleLoading ? <Spinner /> : "Update Role"}
+            </button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };

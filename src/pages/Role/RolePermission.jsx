@@ -38,33 +38,7 @@ const RolePermission = () => {
             All Permissions : {role} (Role)
           </h2>
 
-          <div className="flex gap-3">
-               <button
-  onClick={() => setOpenModal(true)}
-  className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
->
-  <span className="relative z-10 flex items-center gap-2">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4v16m8-8H4"
-      />
-    </svg>
-
-    Add New Permission
-  </span>
-
-  <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-</button>
-          </div>
+ 
         </div>
 
         {/* TABLE */}
