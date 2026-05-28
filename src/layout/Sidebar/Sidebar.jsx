@@ -73,49 +73,7 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
-    {
-      label: "Order Management",
-      icon: FiShoppingCart,
-      children: [
-        { name: "View Orders", url: `/admin/order` },
-        { name: "Assigned Order", url: "/admin/order/assigned" },
-        // { name: "Unassigned Order", url: "/admin/order/unassigned" },
-        { name: "Download Order", url: "/admin/order/download" },
-      ],
-    },
-    {
-      label: "Admin User Profile",
-      icon: FaUserShield,
-      children: [
-        { name: "All Users", url: "/admin/user" },
         {
-          name: "Add User",
-          url: "/admin/user",
-          state: { openModal: true },
-        },
-      ],
-    },
-    {
-      label: "Customer Management",
-      icon: FiUsers,
-      children: [
-        { name: "All Customers", url: "/admin/customer" },
-        { name: "Customer KYC Approval", url: "/admin/customer/kyc" },
-        { name: "Contact Customers", url: "/admin/customer/contact" },
-        { name: "Email Subscribed", url: "/admin/customer/subscribe" },
-      ],
-    },
-    {
-      label: "Rider Management",
-      icon: FiTruck,
-      children: [
-        { name: "All Riders", url: `/admin/rider` },
-        { name: "Riders Referrals", url: "/admin/rider/referral" },
-        // { name: "Rider KYC Approval", url: "/admin/rider/kyc" },
-        { name: "Rider Commission", url: "/admin/rider/commission" },
-      ],
-    },
-    {
       label: "Permission",
       icon: FiUserCheck,
       children: [
@@ -127,95 +85,7 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
-    {
-      label: "Category",
-      icon: TbCategory,
-      children: [
-        { name: "All Categories", url: "/admin/category" },
-        {
-          name: "Add Category",
-          url: "/admin/category",
-          state: { openModal: true },
-        },
-      ],
-    },
-    {
-      label: "Attribute & Values",
-      icon: MdOutlineInventory2,
-      children: [
-        { name: "All Attributes", url: "/admin/attribute" },
-        {
-          name: "Add Attribute",
-          url: "/admin/attribute",
-          state: { openModal: true },
-        },
-      ],
-    },
-    {
-      label: "Product",
-      icon: FiPackage,
-      children: [
-        { name: "Active Products", url: `/admin/product?status=active` },
-        { name: "Inactive Products", url: "/admin/product?status=inactive" },
-        {
-          name: "Add Product",
-          url: "/admin/product",
-          state: { openModal: true },
-        },
-        { name: "Add Bulk Products", url: "/admin/product/bulk-products" },
-        { name: "Add Bulk Images", url: "/admin/product/bulk-images" },
-      ],
-    },
-    {
-      label: "Coupon Code",
-      icon: FiTag,
-      children: [
-        { name: "All Coupon Code", url: "/admin/coupon" },
-        {
-          name: "Add Coupon Code",
-          url: "/admin/coupon",
-          state: { openModal: true },
-        },
-      ],
-    },
-    {
-      label: "Offer",
-      icon: FiGift,
-      children: [
-        { name: "All Offers", url: "/admin/offer" },
-        {
-          name: "Add Offer",
-          url: "/admin/offer",
-          state: { openModal: true },
-        },
-      ],
-    },
-    {
-      label: "Taxes",
-      icon: FiPercent,
-      children: [
-        { name: "All Taxes", url: "/admin/tax" },
-        {
-          name: "Add Tax",
-          url: "/admin/tax",
-          state: { openModal: true },
-        },
-      ],
-    },
-    {
-      label: "CMS",
-      icon: FiFileText,
-      children: [
-        { name: "All Home Sections", url: "/admin/cms/home-section" },
-        { name: "App Banners", url: "/admin/cms/app-banner" },
-        { name: "About Us", url: "/admin/cms/about-us" },
-        { name: "FAQ", url: "/admin/cms/faq" },
-        { name: "Privacy Policy", url: "/admin/cms/privacy-policy" },
-        { name: "Contact Us", url: "/admin/cms/contact-us" },
-        { name: "Terms & Conditions", url: "/admin/cms/terms-conditions" },
-        { name: "Return Policy", url: "/admin/cms/return-policy" },
-      ],
-    },
+
     {
       label: "Maintenance",
       icon: FiFileText,

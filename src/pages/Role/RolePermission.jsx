@@ -16,7 +16,7 @@ const RolePermission = () => {
   const { rolePermissionData, roleLoading } = useSelector(
     (state) => state.role,
   );
-  const data = rolePermissionData || [];
+  const data = rolePermissionData?.permissions || [];
   const hasData = Array.isArray(data) && data.length > 0;
 
   const [selected, setSelected] = useState({});

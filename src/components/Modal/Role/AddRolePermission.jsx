@@ -22,7 +22,7 @@ const AddRolePermissionModal = ({ isOpen, onClose, permissionNames }) => {
     (Array.isArray(permissionData?.data) && permissionData?.data) || [];
 
   const groupedPermissions = data.reduce((acc, item) => {
-    const module = item.module || "Other";
+    const module = item.module || "Permissions";
 
     if (!acc[module]) acc[module] = [];
     acc[module].push(item);

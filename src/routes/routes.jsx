@@ -10,6 +10,7 @@ import ProtectedRoute from "../components/ProtectedRoutes";
 import MaintenanceMode from "../pages/Maintenance/MaintenanceMode";
 import Role from "../pages/Role/Role";
 import RolePermission from "../pages/Role/RolePermission";
+import Permission from "../pages/Permission/Permission";
 
 export const appRouter = createBrowserRouter([
   /* ---------------- PUBLIC ROUTES ---------------- */
@@ -54,6 +55,14 @@ export const appRouter = createBrowserRouter([
           element: (
             <ProtectedRoute requiredPermission="view roles">
               <RolePermission />
+            </ProtectedRoute>
+          ),
+        },
+  {
+          path: "permission",
+          element: (
+            <ProtectedRoute requiredPermission="view permissions">
+              <Permission />
             </ProtectedRoute>
           ),
         },

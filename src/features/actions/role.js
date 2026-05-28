@@ -85,7 +85,7 @@ export const getRoleWithPermissions = createAsyncThunk(
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
-      const { data } = await instance.get(`/admin/admins/${id}/permissions`, {
+      const { data } = await instance.get(`/admin/roles/${id}`, {
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${loginToken}`,

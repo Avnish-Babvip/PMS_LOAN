@@ -3,19 +3,17 @@ import { instance } from "../../services/axiosInterceptor";
 
 export const getAllPermissions = createAsyncThunk(
   "/api/admin/permissions",
-  async ({ search, page, per_page }, { getState, rejectWithValue }) => {
+  async ({ page, per_page }, { getState, rejectWithValue }) => {
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
 
       const params = new URLSearchParams();
 
-      params.append("page", page);
+      params.append("page", page||1);
       params.append("per_page", per_page || 10);
 
-      if (search) params.append("search", search);
-
-      const link = `/admin/permission?${params.toString()}`;
+      const link = `/admin/permissions?${params.toString()}`;
 
       const { data } = await instance.get(link, {
         headers: {
