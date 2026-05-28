@@ -19,19 +19,6 @@ export const adminLogin = createAsyncThunk(
   },
 );
 
-export const verifyAdmin = createAsyncThunk(
-  "/api/admin/verify-otp",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const { data } = await instance.post(`/admin/verify-otp`, payload, {
-        withCredentials: false,
-      });
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message || "Failed ");
-    }
-  },
-);
 
 export const forgotPassword = createAsyncThunk(
   "admin/forgot-password",
@@ -80,8 +67,9 @@ export const changePassword = createAsyncThunk(
 
 export const adminLogout = createAsyncThunk(
   "admin/Logout",
-  async (loginToken, { rejectWithValue }) => {
+  async (_, {getState, rejectWithValue }) => {
     try {
+      const loginToken = getState().authentication?.adminData?.token;
       const { data } = await instance.post(
         `/admin/logout`,
         {},
@@ -121,42 +109,4 @@ export const updateAdminProfile = createAsyncThunk(
   },
 );
 
-export const updateCompanyInfo = createAsyncThunk(
-  "admin/company-info/update",
-  async (payload, { getState, rejectWithValue }) => {
-    try {
-      // ✅ Get token directly from store
-      const loginToken = getState().authentication?.adminData?.token;
 
-      const { data } = await instance.post(`/admin/company-info`, payload, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${loginToken}`,
-        },
-      });
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message || "Failed ");
-    }
-  },
-);
-
-export const getCompanyInfo = createAsyncThunk(
-  "admin/company-info",
-  async (_, { getState, rejectWithValue }) => {
-    try {
-      // ✅ Get token directly from store
-      const loginToken = getState().authentication?.adminData?.token;
-
-      const { data } = await instance.get(`/admin/company-info`, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${loginToken}`,
-        },
-      });
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message || "Failed ");
-    }
-  },
-);

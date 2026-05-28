@@ -41,12 +41,31 @@ const Role = () => {
           <h2 className="font-semibold text-gray-800">All Roles</h2>
 
           <div className="flex gap-3">
-            <button
-              onClick={() => setOpenModal(true)}
-              className="bg-[#79BF28] hover:bg-[#6dac24] text-white text-sm px-4 py-2 rounded-lg"
-            >
-              Add New Role
-            </button>
+        <button
+  onClick={() => setOpenModal(true)}
+  className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+>
+  <span className="relative z-10 flex items-center gap-2">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 4v16m8-8H4"
+      />
+    </svg>
+
+    Add New Role
+  </span>
+
+  <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+</button>
           </div>
         </div>
 
@@ -57,7 +76,6 @@ const Role = () => {
               <tr>
                 <th className="text-left ps-5  px-3 py-3 w-[160px]">Role ID</th>
                 <th className="text-left px-3 py-3 w-[160px]">Name</th>
-                <th className="text-left px-3 py-3 w-[160px]">Description</th>
                 <th className="text-center px-3 py-3 w-[120px]">Action</th>
               </tr>
             </thead>
@@ -68,7 +86,6 @@ const Role = () => {
                 <TableSkeleton
                   rows={5}
                   columns={[
-                    { width: "w-32 h-4" },
                     { width: "w-32 h-4" },
                     { width: "w-32 h-4" },
                   ]}
@@ -108,12 +125,7 @@ const Role = () => {
                     <td className=" px-3 py-5 text-gray-700">
                       {item.name || "—"}
                     </td>
-                    <td
-                      className="ps-5 truncate  px-3 py-5 text-gray-700"
-                      title={item.description}
-                    >
-                      {item.description || "—"}
-                    </td>
+               
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
@@ -139,7 +151,7 @@ const Role = () => {
                           <FiTrash2 />
                         </button>
                         <Link
-                          to={`${item?.id}`}
+                          to={`${item?.id}/${item?.name}`}
                           className="p-2 px-3 flex items-center gap-2 bg-indigo-100 text-indigo-500 rounded-lg hover:bg-indigo-200"
                         >
                           <FiEye />

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
-import { salesChart, trackSales } from "../actions/dashboard";
+import { dashboard } from "../actions/dashboard";
 
 const formattedDate = new Date().toLocaleString("en-US", {
   weekday: "long",
@@ -14,10 +14,8 @@ const formattedDate = new Date().toLocaleString("en-US", {
 
 const initialState = {
   errorMessage: "",
-  salesLoading: false,
-  chartLoading: false,
-  trackSalesData: {},
-  salesChartData: [],
+  dashboardLoading: false,
+  dashboardData: {},
 };
 
 // ---------------------------------------------------------------------------------------
@@ -28,38 +26,23 @@ const dashboardSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(trackSales.pending, (state) => {
+      .addCase(dashboard.pending, (state) => {
         state.errorMessage = "";
-        state.salesLoading = true;
+        state.dashboardLoading = true;
       })
-      .addCase(trackSales.fulfilled, (state, action) => {
+      .addCase(dashboard.fulfilled, (state, action) => {
         state.errorMessage = "";
-        state.salesLoading = false;
-        state.trackSalesData = action.payload;
+        state.dashboardLoading = false;
+        state.dashboardData = action.payload.data;
       })
-      .addCase(trackSales.rejected, (state, action) => {
+      .addCase(dashboard.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        state.salesLoading = false;
+        state.dashboardLoading = false;
         toast(action.payload, {
           description: formattedDate,
         });
       })
-      .addCase(salesChart.pending, (state) => {
-        state.errorMessage = "";
-        state.chartLoading = true;
-      })
-      .addCase(salesChart.fulfilled, (state, action) => {
-        state.errorMessage = "";
-        state.chartLoading = false;
-        state.salesChartData = action.payload.data;
-      })
-      .addCase(salesChart.rejected, (state, action) => {
-        state.errorMessage = action.payload || "Failed";
-        state.chartLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
-      });
+
   },
 });
 

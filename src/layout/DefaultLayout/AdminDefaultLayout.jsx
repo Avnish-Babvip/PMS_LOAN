@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Header } from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
-import { useSelector } from "react-redux";
 
 const AdminDefaultLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
-  const { isAdminLoggedIn } = useSelector((state) => state.authentication);
 
-  if (!isAdminLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
 
   return (
     <ErrorBoundary>

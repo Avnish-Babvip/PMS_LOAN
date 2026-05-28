@@ -40,7 +40,7 @@ const Login = () => {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   };
   const dispatch = useDispatch();
-  const { isLoading, isCredentials } = useSelector(
+  const { isLoading,isAdminLoggedIn } = useSelector(
     (state) => state.authentication,
   );
   const navigate = useNavigate();
@@ -57,13 +57,11 @@ const Login = () => {
     reset();
   };
 
-  useEffect(() => {
-    dispatch(resetUserState());
-  }, []);
-
-  useEffect(() => {
-    isCredentials && navigate("/login-otp");
-  }, [isCredentials]);
+   useEffect(() => {
+     if (isAdminLoggedIn) {
+       navigate("/");
+     }
+   }, [isAdminLoggedIn]);
   // Auto slide
   useEffect(() => {
     const timer = setInterval(nextSlide, 4000);
@@ -97,17 +95,17 @@ const Login = () => {
             </label>
 
             <input
-              {...register("login", {
-                required: "Email is required",
+              {...register("email", {
+                required: "Email address is required",
               })}
               type="email"
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green outline-none"
             />
 
-            {errors.login && (
+            {errors.email && (
               <div className="text-start pt-2 text-red-600">
-                {errors.login.message}
+                {errors.email.message}
               </div>
             )}
           </div>

@@ -53,11 +53,25 @@ const Sidebar = ({ closeSidebar }) => {
     if (closeSidebar) closeSidebar();
   };
 
-  const adminMenuItems = [
+
+  const menuItems =
+  [
     {
       label: "Dashboard",
       icon: TbDashboardFilled,
       url: "/admin",
+    },
+        {
+      label: "Role",
+      icon: FiShield,
+      children: [
+        { name: "All Roles", url: "/admin/role" },
+        {
+          name: "Add Role",
+          url: "/admin/role",
+          state: { openModal: true },
+        },
+      ],
     },
     {
       label: "Order Management",
@@ -99,18 +113,6 @@ const Sidebar = ({ closeSidebar }) => {
         { name: "Riders Referrals", url: "/admin/rider/referral" },
         // { name: "Rider KYC Approval", url: "/admin/rider/kyc" },
         { name: "Rider Commission", url: "/admin/rider/commission" },
-      ],
-    },
-    {
-      label: "Role",
-      icon: FiShield,
-      children: [
-        { name: "All Roles", url: "/admin/role" },
-        {
-          name: "Add Role",
-          url: "/admin/role",
-          state: { openModal: true },
-        },
       ],
     },
     {
@@ -234,59 +236,7 @@ const Sidebar = ({ closeSidebar }) => {
         { name: "Payment Gateway", url: "/admin/settings/payment-gateway" },
       ],
     },
-  ];
-
-  const riderMenuItems = [
-    {
-      label: "Dashboard",
-      icon: TbDashboardFilled,
-      url: "/rider",
-    },
-    {
-      label: "Assigned Orders",
-      icon: FiTruck,
-      url: `/rider/order/assigned`,
-    },
-    {
-      label: "Order History",
-      icon: FiShoppingCart,
-      url: "/rider/order/history",
-    },
-    {
-      label: "Your Wallet",
-      icon: FiCreditCard,
-      url: "/rider/wallet",
-    },
-    {
-      label: "Wallet Transactions",
-      icon: FiRepeat,
-      url: "/rider/wallet/history",
-    },
-    {
-      label: "KYC & Rider Profile",
-      icon: FiUserCheck,
-      url: "/rider/profile",
-    },
-    {
-      label: "Your Referral Code",
-      icon: FiGift,
-      url: "/rider/referral",
-    },
-    {
-      label: "Referral History",
-      icon: FiUsers,
-      url: "/rider/referral/history",
-    },
-    {
-      label: "Your Commission",
-      icon: FiPercent,
-      url: "/rider/commission",
-    },
-  ];
-
-  const menuItems =
-    (adminData?.admin?.role_id === 1 && adminMenuItems) ||
-    (adminData?.admin?.role_id === 6 && riderMenuItems);
+  ]
 
   return (
     <div className="flex flex-col h-screen bg-[#111827] text-gray-400 shadow-xl">
@@ -296,7 +246,7 @@ const Sidebar = ({ closeSidebar }) => {
         <div className="flex justify-center mb-8">
           <Link to="/">
             <div className="font-extrabold text-xl text-white">
-              AONE GO BASKET
+             PMS
             </div>
           </Link>
         </div>
@@ -319,8 +269,8 @@ const Sidebar = ({ closeSidebar }) => {
                   }
                   className={`flex items-center justify-between px-2 py-2 rounded-lg cursor-pointer transition-all ${
                     isActiveParent
-                      ? "bg-gradient-to-r from-blue-600 to-blue-900 text-white"
-                      : "text-gray-400 hover:text-white hover:bg-[#1A1A40]"
+                      ? "bg-gradient-to-r from-[#EF4444] to-[#89101C] text-white"
+                      : "text-gray-400 hover:text-white hover:bg-[#89101C]"
                   }`}
                 >
                   <div className="flex items-start gap-3">
