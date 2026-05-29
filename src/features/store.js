@@ -24,15 +24,19 @@ import paymentGateway from "./slices/paymentGateway";
 import home from "./slices/home";
 import cms from "./slices/cms";
 import maintenance from "./slices/maintenance";
+import agent from "./slices/agent";
 
 
 const rootReducer = combineReducers({
   references,
+  dashboard,
   authentication,
   adminUser,
-  customer,
   role,
   permission,
+  agent,
+  maintenance,
+  customer,
   category,
   attribute,
   product,
@@ -43,11 +47,9 @@ const rootReducer = combineReducers({
   coupon,
   offer,
   tax,
-  dashboard,
   paymentGateway,
   home,
   cms,
-  maintenance,
 });
 
 // Redux-persist configuration

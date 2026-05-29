@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { instance } from "../../services/axiosInterceptor";
 
-export const getAllAdminUsers = createAsyncThunk(
+export const getAllAgents = createAsyncThunk(
   "admin/admin-users",
   async ({ search, status, page, role_id }, { getState, rejectWithValue }) => {
     try {
@@ -23,7 +23,7 @@ export const getAllAdminUsers = createAsyncThunk(
         params.append("role_id", role_id);
       }
 
-      const link = `/admin/admins?${params.toString()}`;
+      const link = `/admin/agents?${params.toString()}`;
 
       const { data } = await instance.get(link, {
         headers: {

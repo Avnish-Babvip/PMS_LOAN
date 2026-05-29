@@ -85,6 +85,30 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
+        {
+      label: "Manage Admin Users",
+      icon: FiUserCheck,
+      children: [
+        { name: "All Users", url: "/admin/user" },
+        {
+          name: "Add User",
+          url: "/admin/user",
+          state: { openModal: true },
+        },
+      ],
+    },
+        {
+      label: "Manage Agents",
+      icon: FiUserCheck,
+      children: [
+        { name: "All Agents", url: "/admin/agent" },
+        {
+          name: "Add Agent",
+          url: "/admin/agent",
+          state: { openModal: true },
+        },
+      ],
+    },
 
     {
       label: "Maintenance",

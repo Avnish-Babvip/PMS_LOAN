@@ -11,6 +11,8 @@ import MaintenanceMode from "../pages/Maintenance/MaintenanceMode";
 import Role from "../pages/Role/Role";
 import RolePermission from "../pages/Role/RolePermission";
 import Permission from "../pages/Permission/Permission";
+import AdminUser from "../pages/AdminUser/AdminUser";
+import Agent from "../pages/Agent/Agent";
 
 export const appRouter = createBrowserRouter([
   /* ---------------- PUBLIC ROUTES ---------------- */
@@ -63,6 +65,22 @@ export const appRouter = createBrowserRouter([
           element: (
             <ProtectedRoute requiredPermission="view permissions">
               <Permission />
+            </ProtectedRoute>
+          ),
+        },
+  {
+          path: "user",
+          element: (
+            <ProtectedRoute requiredPermission="view permissions">
+              <AdminUser />
+            </ProtectedRoute>
+          ),
+        },
+  {
+          path: "agent",
+          element: (
+            <ProtectedRoute requiredPermission="view permissions">
+              <Agent />
             </ProtectedRoute>
           ),
         },
