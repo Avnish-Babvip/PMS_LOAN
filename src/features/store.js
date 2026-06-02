@@ -6,25 +6,12 @@ import storage from "redux-persist/lib/storage";
 import references from "./slices/references";
 import authentication from "./slices/authentication";
 import adminUser from "./slices/adminUser";
-import customer from "./slices/customer";
 import role from "./slices/role";
 import permission from "./slices/permission";
-import category from "./slices/category";
-import attribute from "./slices/attribute";
-import product from "./slices/product";
-import rider from "./slices/rider";
-import order from "./slices/order";
-import location from "./slices/location";
-import commission from "./slices/commission";
-import coupon from "./slices/coupon";
-import offer from "./slices/offer";
-import tax from "./slices/tax";
 import dashboard from "./slices/dashboard";
-import paymentGateway from "./slices/paymentGateway";
-import home from "./slices/home";
-import cms from "./slices/cms";
 import maintenance from "./slices/maintenance";
 import agent from "./slices/agent";
+import bank from "./slices/bank";
 
 
 const rootReducer = combineReducers({
@@ -35,21 +22,9 @@ const rootReducer = combineReducers({
   role,
   permission,
   agent,
+  bank,
   maintenance,
-  customer,
-  category,
-  attribute,
-  product,
-  rider,
-  order,
-  location,
-  commission,
-  coupon,
-  offer,
-  tax,
-  paymentGateway,
-  home,
-  cms,
+
 });
 
 // Redux-persist configuration

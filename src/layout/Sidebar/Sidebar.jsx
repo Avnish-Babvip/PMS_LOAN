@@ -62,7 +62,7 @@ const Sidebar = ({ closeSidebar }) => {
       url: "/admin",
     },
         {
-      label: "Role",
+      label: "Role & Permissions",
       icon: FiShield,
       children: [
         { name: "All Roles", url: "/admin/role" },
@@ -71,18 +71,7 @@ const Sidebar = ({ closeSidebar }) => {
           url: "/admin/role",
           state: { openModal: true },
         },
-      ],
-    },
-        {
-      label: "Permission",
-      icon: FiUserCheck,
-      children: [
-        { name: "All Permissions", url: "/admin/permission" },
-        {
-          name: "Add Permission",
-          url: "/admin/permission",
-          state: { openModal: true },
-        },
+         { name: "All Permissions", url: "/admin/permission" },
       ],
     },
         {
@@ -109,6 +98,18 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
+        {
+      label: "Bank Management",
+      icon: FiUserCheck,
+      children: [
+        { name: "All Banks", url: "/admin/bank" },
+        {
+          name: "Add Bank",
+          url: "/admin/bank",
+          state: { openModal: true },
+        },
+      ],
+    },
 
     {
       label: "Maintenance",
@@ -122,12 +123,7 @@ const Sidebar = ({ closeSidebar }) => {
       label: "Settings",
       icon: TbSettingsFilled,
       children: [
-        { name: "Order Settings", url: "/admin/settings/order-settings" },
-        { name: "Location", url: "/admin/settings/location" },
-        { name: "Company Info", url: "/admin/settings/company-info" },
-        { name: "Delivery Pincode", url: "/admin/settings/delivery-pincode" },
         { name: "Site Settings", url: "/admin/settings/site-settings" },
-        { name: "Payment Gateway", url: "/admin/settings/payment-gateway" },
       ],
     },
   ]

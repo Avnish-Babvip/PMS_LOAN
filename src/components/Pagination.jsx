@@ -7,8 +7,16 @@ const Pagination = ({
 }) => {
   if (!data || data.last_page <= 1) return null;
 
-  const totalPages = data.last_page;
+  const totalPages = data.total_pages || data.last_page;
   const windowSize = 5;
+
+  const from =
+  ((data.current_page - 1) * data.per_page + 1) || data.from;
+
+const to = (Math.min(
+  data.current_page * data.per_page,
+  data.total) || data.to
+);
 
   // 🔢 Calculate page window safely
   let startPage = Math.max(1, page - Math.floor(windowSize / 2));
@@ -24,11 +32,13 @@ const Pagination = ({
     (_, i) => startPage + i,
   );
 
+  console.log(pages)
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-5 pt-3 pb-5">
       {/* INFO */}
       <p className="text-sm text-gray-400">
-        Showing {data.from}–{data.to} of {data.total} {label}
+        Showing {from}–{to} of {data.total} {label}
       </p>
 
       {/* PAGINATION */}

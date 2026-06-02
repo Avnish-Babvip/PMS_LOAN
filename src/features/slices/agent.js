@@ -1,10 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
-import {
-  addAdminUser,
-  editAdminUserStatus,
-} from "../actions/adminuser";
-import { getAllAgents } from "../actions/agent";
+import { addAgent, editAgent, getAllAgents } from "../actions/agent";
 
 const formattedDate = new Date().toLocaleString("en-US", {
   weekday: "long",
@@ -46,25 +42,25 @@ const agentSlice = createSlice({
           description: formattedDate,
         });
       })
-      .addCase(addAdminUser.pending, (state) => {
+      .addCase(addAgent.pending, (state) => {
         state.errorMessage = "";
         state.agentLoading = true;
       })
-      .addCase(addAdminUser.fulfilled, (state, action) => {
+      .addCase(addAgent.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.agentLoading = false;
-        toast("Admin user added successfully.", {
+        toast("Agent added successfully.", {
           description: formattedDate,
         });
       })
-      .addCase(addAdminUser.rejected, (state, action) => {
+      .addCase(addAgent.rejected, (state, action) => {
         state.agentLoading = false;
 
         const payload = action.payload;
 
         // ✅ Validation errors from backend
-        if (payload?.data?.errors) {
-          Object.values(payload.data.errors).forEach((messages) => {
+        if (payload?.errors) {
+          Object.values(payload.errors).forEach((messages) => {
             messages.forEach((msg) => {
               toast.error(msg, {
                 description: formattedDate,
@@ -83,18 +79,18 @@ const agentSlice = createSlice({
           });
         }
       })
-      .addCase(editAdminUserStatus.pending, (state) => {
+      .addCase(editAgent.pending, (state) => {
         state.errorMessage = "";
         state.agentLoading = true;
       })
-      .addCase(editAdminUserStatus.fulfilled, (state, action) => {
+      .addCase(editAgent.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.agentLoading = false;
-        toast("Admin user status updated successfully.", {
+        toast("Agent updated successfully.", {
           description: formattedDate,
         });
       })
-      .addCase(editAdminUserStatus.rejected, (state, action) => {
+      .addCase(editAgent.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.agentLoading = false;
         toast(action.payload, {

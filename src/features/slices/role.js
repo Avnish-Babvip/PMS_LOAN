@@ -67,8 +67,8 @@ const roleSlice = createSlice({
         const payload = action.payload;
 
         // ✅ Validation errors from backend
-        if (payload?.data?.errors) {
-          Object.values(payload.data.errors).forEach((messages) => {
+        if (payload?.errors) {
+          Object.values(payload.errors).forEach((messages) => {
             messages.forEach((msg) => {
               toast.error(msg, {
                 description: formattedDate,

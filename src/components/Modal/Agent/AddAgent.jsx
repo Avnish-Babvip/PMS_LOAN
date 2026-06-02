@@ -2,17 +2,17 @@ import { useForm } from "react-hook-form";
 import { HiX } from "react-icons/hi";
 import { FiShield, FiUserPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Input, SelectWithId } from "../../ReusableInputs";
-import { addAdminUser } from "../../../features/actions/adminuser";
 import { Spinner } from "../../Loader/Spinner";
+import { addAgent } from "../../../features/actions/agent";
 
-const AddAdminUserModal = ({
+const AddAgentModal = ({
   isOpen,
   onClose,
-  roles,
+  roles
 }) => {
   const dispatch = useDispatch();
+
 
   const { adminUserLoading } = useSelector(
     (state) => state.adminUser,
@@ -44,7 +44,7 @@ const AddAdminUserModal = ({
   };
 
   const onSubmit = (data) => {
-    dispatch(addAdminUser(data))
+    dispatch(addAgent(data))
       .unwrap()
       .then(() => {
         onClose();
@@ -71,11 +71,11 @@ const AddAdminUserModal = ({
 
               <div>
                 <h2 className="text-2xl font-bold text-white">
-                  Add Admin User
+                  Add Agent
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-300">
-                  Create a new administrator account
+                  Create a new agent account
                 </p>
               </div>
             </div>
@@ -94,7 +94,7 @@ const AddAdminUserModal = ({
         <div className="flex-1 overflow-y-auto bg-[#f8fafc] p-8">
           <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
             <h3 className="mb-6 text-lg font-semibold text-gray-800">
-              Administrator Information
+              Agent Information
             </h3>
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -107,26 +107,19 @@ const AddAdminUserModal = ({
               />
 
               <Input
-                type="email"
-                label="Email Address"
-                name="email"
+                label="Username"
+                name="username"
                 register={register}
                 required
                 errors={errors}
               />
 
               <Input
-                label="Mobile Number"
-                name="phone"
+                type="email"
+                label="Email Address"
+                name="email"
                 register={register}
                 required
-                rules={{
-                  minLength: {
-                    value: 10,
-                    message:
-                      "Mobile number must be at least 10 digits",
-                  },
-                }}
                 errors={errors}
               />
 
@@ -153,6 +146,16 @@ const AddAdminUserModal = ({
                 }}
                 errors={errors}
               />
+
+              <SelectWithId
+                label="Assign Role"
+                name="role"
+                options={roles}
+                register={register}
+                required
+                errors={errors}
+              />
+
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
                   Status
@@ -162,40 +165,15 @@ const AddAdminUserModal = ({
                   {...register("status")}
                   className="w-full text-gray-700 rounded-xl border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-[#79BF28]"
                 >
-                  <option value={true}>
+                  <option value={1}>
                     Active
                   </option>
 
-                  <option value={false}>
+                  <option value={0}>
                     Inactive
                   </option>
                 </select>
               </div>
-
-              <div className="md:col-span-2">
-  <label className="block text-sm font-medium text-gray-700 mb-3">
-    Assign Roles
-  </label>
-
-  <div className="grid grid-cols-1  sm:grid-cols-2 gap-3">
-    {roles?.map((role) => (
-      <label
-        className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 cursor-pointer hover:border-[#79BF28]"
-      >
-        <input
-          type="checkbox"
-          value={role.label}
-          {...register("roles")}
-          className="h-4 w-4 accent-[#79BF28]"
-        />
-
-        <span className="text-sm capitalize text-gray-700">
-          {role.label}
-        </span>
-      </label>
-    ))}
-  </div>
-</div>
             </div>
           </div>
 
@@ -236,7 +214,7 @@ const AddAdminUserModal = ({
               {adminUserLoading ? (
                 <Spinner />
               ) : (
-                "Create Admin User"
+                "Create Agent"
               )}
             </button>
           </div>
@@ -246,4 +224,4 @@ const AddAdminUserModal = ({
   );
 };
 
-export default AddAdminUserModal;
+export default AddAgentModal;

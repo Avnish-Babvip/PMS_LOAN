@@ -1,10 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
-import {
-  addAdminUser,
-  editAdminUserStatus,
-  getAllAdminUsers,
-} from "../actions/adminuser";
+import { addBank, editBank, getAllBanks, toggleBankStatus } from "../actions/bank";
+
 
 const formattedDate = new Date().toLocaleString("en-US", {
   weekday: "long",
@@ -18,53 +15,52 @@ const formattedDate = new Date().toLocaleString("en-US", {
 
 const initialState = {
   errorMessage: "",
-  adminUserLoading: false,
-  adminUserData: {},
+  bankLoading: false,
+  bankData: [],
 };
 
 // ---------------------------------------------------------------------------------------
 
-const adminUserSlice = createSlice({
-  name: "adminUserSlice",
+const bankSlice = createSlice({
+  name: "bankSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllAdminUsers.pending, (state) => {
+      .addCase(getAllBanks.pending, (state) => {
         state.errorMessage = "";
-        state.adminUserLoading = true;
+        state.bankLoading = true;
       })
-      .addCase(getAllAdminUsers.fulfilled, (state, action) => {
+      .addCase(getAllBanks.fulfilled, (state, action) => {
         state.errorMessage = "";
-        state.adminUserLoading = false;
-        state.adminUserData = action.payload;
+        state.bankLoading = false;
+        state.bankData = action.payload;
       })
-      .addCase(getAllAdminUsers.rejected, (state, action) => {
+      .addCase(getAllBanks.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        state.adminUserLoading = false;
+        state.bankLoading = false;
         toast(action.payload, {
           description: formattedDate,
         });
       })
-      .addCase(addAdminUser.pending, (state) => {
+      .addCase(addBank.pending, (state) => {
         state.errorMessage = "";
-        state.adminUserLoading = true;
+        state.bankLoading = true;
       })
-      .addCase(addAdminUser.fulfilled, (state, action) => {
+      .addCase(addBank.fulfilled, (state, action) => {
         state.errorMessage = "";
-        state.adminUserLoading = false;
-        toast("Admin user added successfully.", {
+        state.bankLoading = false;
+        toast("Bank added successfully.", {
           description: formattedDate,
         });
       })
-      .addCase(addAdminUser.rejected, (state, action) => {
-        state.adminUserLoading = false;
+      .addCase(addBank.rejected, (state, action) => {
+        state.bankLoading = false;
 
         const payload = action.payload;
-
         // ✅ Validation errors from backend
         if (payload?.errors) {
-          Object.values(payload.errors).forEach((messages) => {
+          Object.values(payload?.errors).forEach((messages) => {
             messages.forEach((msg) => {
               toast.error(msg, {
                 description: formattedDate,
@@ -83,29 +79,48 @@ const adminUserSlice = createSlice({
           });
         }
       })
-      .addCase(editAdminUserStatus.pending, (state) => {
+      .addCase(editBank.pending, (state) => {
         state.errorMessage = "";
-        state.adminUserLoading = true;
+        state.bankLoading = true;
       })
-      .addCase(editAdminUserStatus.fulfilled, (state, action) => {
+      .addCase(editBank.fulfilled, (state, action) => {
         state.errorMessage = "";
-        state.adminUserLoading = false;
-        toast("Admin user status updated successfully.", {
+        state.bankLoading = false;
+        toast("Bank details updated successfully.", {
           description: formattedDate,
         });
       })
-      .addCase(editAdminUserStatus.rejected, (state, action) => {
+      .addCase(editBank.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        state.adminUserLoading = false;
+        state.bankLoading = false;
         toast(action.payload, {
           description: formattedDate,
         });
-      });
+      })
+      .addCase(toggleBankStatus.pending, (state) => {
+        state.errorMessage = "";
+        state.bankLoading = true;
+      })
+      .addCase(toggleBankStatus.fulfilled, (state, action) => {
+        state.errorMessage = "";
+        state.bankLoading = false;
+        toast("Bank status updated successfully.", {
+          description: formattedDate,
+        });
+      })
+      .addCase(toggleBankStatus.rejected, (state, action) => {
+        state.errorMessage = action.payload || "Failed";
+        state.bankLoading = false;
+        toast(action.payload, {
+          description: formattedDate,
+        });
+      })
+     
   },
 });
 
 // -------------------------------------------------------------------------
 
 // Action creators are generated for each case reducer function
-export const {} = adminUserSlice.actions;
-export default adminUserSlice.reducer;
+export const {} = bankSlice.actions;
+export default bankSlice.reducer;

@@ -40,13 +40,13 @@ export const getAllAdminUsers = createAsyncThunk(
 );
 
 export const addAdminUser = createAsyncThunk(
-  "/admin/admin-user-generate",
+  "/admin/admins",
   async (payload, { getState, rejectWithValue }) => {
     try {
       const loginToken = getState().authentication?.adminData?.token;
 
       const { data } = await instance.post(
-        `/admin/admin-user-generate`,
+        `/admin/admins`,
         payload,
         {
           headers: {
@@ -66,13 +66,13 @@ export const addAdminUser = createAsyncThunk(
 );
 
 export const editAdminUserStatus = createAsyncThunk(
-  "/admin/admin-users/2",
+  "/admin/admins/2",
   async ({ payload, id }, { getState, rejectWithValue }) => {
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
       const { data } = await instance.patch(
-        `/admin/admin-users/${id}`,
+        `/admin/admins/${id}`,
         payload,
         {
           headers: {

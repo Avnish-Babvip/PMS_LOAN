@@ -39,12 +39,7 @@ const AdminUser = () => {
       value: r.id,
     }));
 
-  const roleMap = useMemo(() => {
-    return roles.reduce((acc, role) => {
-      acc[role.value] = role.label;
-      return acc;
-    }, {});
-  }, [roles]);
+
 
   const updateParams = ({ page, search, status, role_id }) => {
     const params = {};
@@ -86,12 +81,31 @@ const AdminUser = () => {
           <h2 className="font-semibold text-gray-800">All Admin Users</h2>
 
           <div className="flex gap-3">
-            <button
-              onClick={() => setOpenModal(true)}
-              className="bg-[#79BF28] hover:bg-[#6dac24] text-white text-sm px-4 py-2 rounded-lg"
-            >
-              Add New User
-            </button>
+                          <button
+  onClick={() => setOpenModal(true)}
+  className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+>
+  <span className="relative z-10 flex items-center gap-2">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 4v16m8-8H4"
+      />
+    </svg>
+
+    Add New Admin User
+  </span>
+
+  <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+</button>
 
             <FilterSelect
               label="Status"
@@ -132,7 +146,6 @@ const AdminUser = () => {
             <thead className="bg-gray-50 text-gray-500">
               <tr>
                 <th className="text-left ps-5 px-3 py-3 w-[150px]">Name</th>
-                <th className="text-left px-3 py-3 w-[150px]">Username</th>
                 <th className="text-left px-3 py-3 w-[200px]">Email</th>
                 <th className="text-left px-3 py-3 w-[100px]">Mobile</th>
                 <th className="text-left px-3 py-3 w-[100px]">Role</th>
@@ -148,10 +161,9 @@ const AdminUser = () => {
                   rows={5}
                   columns={[
                     { width: "w-32 h-4" }, // Name
-                    { width: "w-32 h-4" }, // Username
-                    { width: "w-56 h-4" }, // Email
+                    { width: "w-32 h-4" }, // Email
                     { width: "w-24 h-4" }, // Mobile
-                    { width: "w-24 h-4" }, // Mobile
+                    { width: "w-24 h-4" }, // Role
                     { width: "w-20 h-4" }, // Status
                   ]}
                   actionColumn
@@ -188,50 +200,49 @@ const AdminUser = () => {
                       {item.name || "—"}
                     </td>
 
-                    <td className="px-3 truncate cursor-pointer py-5 text-gray-700">
-                      <span title={item.username}>{item.username || "—"}</span>
-                    </td>
-
                     <td className="px-3 cursor-pointer py-5 text-gray-700 truncate max-w-[260px]">
                       <span title={item.email}>{item.email || "—"}</span>
                     </td>
 
                     <td className="px-3 py-5 text-gray-700 whitespace-nowrap">
-                      {item.mobile || "—"}
+                      {item.phone || "—"}
                     </td>
-                    <td className="px-3 py-5 text-gray-700 whitespace-nowrap">
-                      {roleMap[item.role_id] ?? "-"}
-                    </td>
+               <td className="px-3 py-5 whitespace-nowrap">
+  <div className="flex flex-wrap gap-2">
+    {item?.roles?.map((role, index) => (
+      <span
+        key={index}
+        className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 border border-indigo-100"
+      >
+        {role}
+      </span>
+    ))}
+  </div>
+</td>
                     <td className="px-3 py-5">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
-                          item.status === "active"
-                            ? "bg-green-100 text-green-600"
+                          item.is_active ? "bg-green-100 text-green-600"
                             : "bg-red-100 text-red-600"
                         }`}
                       >
-                        {item.status || "inactive"}
+                        {item.is_active ? "Active" : "Inactive"}
                       </span>
                     </td>
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
-                        {/* <button className="p-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                        <button className="p-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
                           <FiEye />
-                        </button> */}
+                        </button>
                         <button
                           onClick={() => {
                             setOpenEditModal(true);
-                            setSelectedUser({
-                              id: item?.id,
-                              status: item?.status,
-                              role_id: item?.role_id,
-                            });
+                            setSelectedUser(item);
                           }}
                           className="p-2 px-3 flex items-center gap-2  bg-orange-100 text-orange-500 rounded-lg hover:bg-orange-200"
                         >
                           <FiEdit2 />
-                          <span>Role & Status</span>
                         </button>
                       </div>
                     </td>
@@ -243,9 +254,9 @@ const AdminUser = () => {
         </div>
 
         {/* PAGINATION */}
-        {!adminUserLoading && hasData && adminUserData?.meta && (
+        {!adminUserLoading && hasData && adminUserData?.meta?.pagination && (
           <Pagination
-            data={adminUserData.meta}
+            data={adminUserData?.meta?.pagination}
             page={page}
             label="admin users"
             onPageChange={updateParams}

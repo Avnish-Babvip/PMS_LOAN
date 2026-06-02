@@ -5,7 +5,6 @@ import TableSkeleton from "../../components/TableSkeleton";
 import { deleteRole, getAllRoles } from "../../features/actions/role";
 import { EditRoleModal } from "../../components/Modal/Role/EditRole";
 import AddRoleModal from "../../components/Modal/Role/AddRole";
-import DeleteModal from "../../components/Modal/Delete";
 import { Link, useLocation } from "react-router-dom";
 import { setActiveSubTab } from "../../features/slices/references";
 
@@ -141,15 +140,7 @@ const Role = () => {
                         >
                           <FiEdit2 />
                         </button>
-                        <button
-                          onClick={() => {
-                            setOpenDeleteModal(true);
-                            setSelected({ id: item?.id });
-                          }}
-                          className="p-2 px-3  bg-red-100 text-red-500 rounded-lg hover:bg-red-200"
-                        >
-                          <FiTrash2 />
-                        </button>
+       
                         <Link
                           to={`${item?.id}/${item?.name}`}
                           className="p-2 px-3 flex items-center gap-2 bg-indigo-100 text-indigo-500 rounded-lg hover:bg-indigo-200"
@@ -179,20 +170,7 @@ const Role = () => {
         onClose={() => setOpenEditModal(false)}
         role={selected}
       />
-      <DeleteModal
-        isOpen={openDeleteModal}
-        onClose={() => setOpenDeleteModal(false)}
-        title="Delete Role"
-        isLoading={roleLoading}
-        message="Are you sure you want to delete this role? This action cannot be undone."
-        onConfirm={() => {
-          dispatch(deleteRole(selected.id))
-            .unwrap()
-            .then(() => {
-              setOpenDeleteModal(false);
-            });
-        }}
-      />
+
     </>
   );
 };

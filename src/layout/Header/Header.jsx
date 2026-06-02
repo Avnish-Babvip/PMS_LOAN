@@ -17,143 +17,18 @@ export const Header = ({ setSidebarOpen }) => {
       title: "Admin Users List",
       placeholder: "Search name, username or email...",
     },
-    "/admin/customer": {
-      title: "Customers List",
-      placeholder: "Search name, username or email...",
-    },
-    "/admin/customer/kyc": {
-      title: "Customers Kyc Document List",
-      placeholder: "Search name",
-    },
-    "/admin/customer/subscribe": {
-      title: "Subscribers List",
-      placeholder: "Search email",
-    },
-    "/admin/customer/contact": {
-      title: "Contact List",
-    },
     "/admin/role": {
       title: "Role List",
     },
     "/admin/permission": {
       title: "Permission List",
-      placeholder: "Search name or module...",
     },
-    "/admin/category": {
-      title: "Category List",
-    },
-    "/admin/attribute": {
-      title: "Attribute List",
-    },
-    "/admin/product": {
-      title: "Product List",
-      placeholder: "Search product name ",
-    },
-    "/admin/rider": {
-      title: "Rider List",
-      placeholder: "Search rider name ",
-    },
-    "/admin/rider/referral": {
-      title: "Rider Referral List",
-    },
-    "/admin/rider/kyc": {
-      title: "Rider Kyc Approval List",
-      placeholder: "Search rider",
-    },
-    "/admin/rider/commission": {
-      title: "Rider Commission",
-    },
-    "/admin/order": {
-      title: "Order List",
-      placeholder: "Search customer or order number ",
-    },
-    "/admin/order/assigned": {
-      title: "Assigned Order List",
-      placeholder: "Search rider or order number ",
-    },
-    "/admin/order/unassigned": {
-      title: "Unassigned Order List",
-      placeholder: "Search customer or order number ",
-    },
-    "/admin/order/download": {
-      title: "Download Orders Sheet",
-    },
-    "/admin/coupon": {
-      title: "Coupon List",
-      placeholder: "Search coupon code",
-    },
-    "/admin/offer": {
-      title: "Offer List",
-      placeholder: "Search offer name",
-    },
-    "/admin/tax": {
-      title: "Taxes List",
-    },
-    "/admin/settings/order-settings": {
-      title: "Order Settings",
-      placeholder: "Search pincode number",
-    },
-    "/admin/settings/location": {
-      title: "Location",
-    },
-    "/admin/settings/company-info": {
-      title: "Company Information",
-    },
-    "/admin/settings/delivery-pincode": {
-      title: "Delivery Pincode List",
-      placeholder: "Search pincode number",
-    },
-    "/admin/settings/site-settings": {
-      title: "Site Settings",
-    },
-    "/admin/settings/payment-gateway": {
-      title: "Payment Gateway List",
-    },
-    "/admin/cms/home-section": {
-      title: "Home Section ",
-    },
-    "/admin/cms/app-banner": {
-      title: "App Banner ",
-    },
-    "/admin/cms/about-us": {
-      title: "About Us",
-    },
-    "/admin/cms/faq": {
-      title: "Faq ",
-    },
-    "/admin/cms/privacy-policy": {
-      title: "Privacy Policy",
-    },
-    "/admin/cms/contact-us": {
-      title: "Contact Us",
-    },
-    "/admin/cms/return-policy": {
-      title: "Return Policy",
-    },
-    "/admin/cms/terms-conditions": {
-      title: "Terms & Conditions",
-    },
-    "/admin/maintenance/mode": {
-      title: "Maintenance Setting",
-    },
-    "/admin/maintenance/contact": {
-      title: "Maintenance Contact List",
+    "/admin/bank": {
+      title: "Bank List",
+      placeholder: "Search bank name",
     },
 
-    "/rider": {
-      title: "Rider Dashboard",
-    },
-    "/rider/order/assigned": {
-      title: "Assigned Orders",
-      placeholder: "Search name or order number ",
-    },
-    "/rider/profile": {
-      title: "Your Rider Profile",
-    },
-    "/rider/referral/history": {
-      title: "Rider History",
-      placeholder: "Search name",
-    },
+
   };
 
   const location = useLocation();

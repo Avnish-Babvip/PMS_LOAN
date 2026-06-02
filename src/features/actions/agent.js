@@ -39,14 +39,14 @@ export const getAllAgents = createAsyncThunk(
   },
 );
 
-export const addAdminUser = createAsyncThunk(
-  "/admin/admin-user-generate",
+export const addAgent = createAsyncThunk(
+  "/admin/agents",
   async (payload, { getState, rejectWithValue }) => {
     try {
       const loginToken = getState().authentication?.adminData?.token;
 
       const { data } = await instance.post(
-        `/admin/admin-user-generate`,
+        `/admin/agents`,
         payload,
         {
           headers: {
@@ -65,14 +65,14 @@ export const addAdminUser = createAsyncThunk(
   },
 );
 
-export const editAdminUserStatus = createAsyncThunk(
-  "/admin/admin-users/2",
+export const editAgent = createAsyncThunk(
+  "/admin/agents/2",
   async ({ payload, id }, { getState, rejectWithValue }) => {
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
-      const { data } = await instance.patch(
-        `/admin/admin-users/${id}`,
+      const { data } = await instance.put(
+        `/admin/agents/${id}`,
         payload,
         {
           headers: {
