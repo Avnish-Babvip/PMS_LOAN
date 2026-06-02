@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 import {
   addAdminUser,
-  editAdminUserStatus,
+  editAdminUser,
   getAllAdminUsers,
 } from "../actions/adminuser";
 
@@ -83,18 +83,18 @@ const adminUserSlice = createSlice({
           });
         }
       })
-      .addCase(editAdminUserStatus.pending, (state) => {
+      .addCase(editAdminUser.pending, (state) => {
         state.errorMessage = "";
         state.adminUserLoading = true;
       })
-      .addCase(editAdminUserStatus.fulfilled, (state, action) => {
+      .addCase(editAdminUser.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.adminUserLoading = false;
-        toast("Admin user status updated successfully.", {
+        toast("Admin user updated successfully.", {
           description: formattedDate,
         });
       })
-      .addCase(editAdminUserStatus.rejected, (state, action) => {
+      .addCase(editAdminUser.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.adminUserLoading = false;
         toast(action.payload, {

@@ -17,6 +17,10 @@ export const Header = ({ setSidebarOpen }) => {
       title: "Admin Users List",
       placeholder: "Search name, username or email...",
     },
+    "/admin/agent": {
+      title: "Agents List",
+      placeholder: "Search name, username or email...",
+    },
     "/admin/role": {
       title: "Role List",
     },

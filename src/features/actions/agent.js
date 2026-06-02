@@ -11,7 +11,7 @@ export const getAllAgents = createAsyncThunk(
       const params = new URLSearchParams();
 
       params.append("page", page);
-      params.append("per_page", 10);
+      params.append("per_page", 1);
 
       if (search) params.append("search", search);
 
@@ -20,7 +20,7 @@ export const getAllAgents = createAsyncThunk(
         params.append("status", status);
       }
       if (role_id !== "" && role_id !== undefined) {
-        params.append("role_id", role_id);
+        params.append("role", role_id);
       }
 
       const link = `/admin/agents?${params.toString()}`;

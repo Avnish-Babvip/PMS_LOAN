@@ -2,39 +2,44 @@ import { useEffect, useMemo, useState } from "react";
 import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useSearchParams } from "react-router-dom";
+import { getAllAdminUsers } from "../../features/actions/adminuser";
 import Pagination from "../../components/Pagination";
 import TableSkeleton from "../../components/TableSkeleton";
+import AddAdminUserModal from "../../components/Modal/AdminUser/AddAdminUser";
 import FilterSelect from "../../components/FilterSelect";
 import { getAllRoles } from "../../features/actions/role";
+import { EditAdminUserStatusModal } from "../../components/Modal/AdminUser/EditAdminUser";
 import { setActiveSubTab } from "../../features/slices/references";
-import { getAllAgents } from "../../features/actions/agent";
-import AddAgentModal from "../../components/Modal/Agent/AddAgent";
-import EditAgentModal from "../../components/Modal/Agent/EditAgent";
 
-const Agent = () => {
+const AdminUser = () => {
   const { state } = useLocation();
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { agentData, agentLoading } = useSelector(
-    (state) => state.agent,
+  const { adminUserData, adminUserLoading } = useSelector(
+    (state) => state.adminUser,
   );
   const { roleData } = useSelector((state) => state.role);
+
   const [selectedUser, setSelectedUser] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
+
   const page = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
   const role_id = searchParams.get("role_id") || "";
-  const users = agentData?.data || [];
+
+  const users = adminUserData?.data || [];
   const hasData = Array.isArray(users) && users.length > 0;
 
-    const roles =[{label:"verifier",value:"verifier"},
-{label:"boe_1",value:"boe_1"},
-{label:"boe_2",value:"boe_2"},
-{label:"boe_3",value:"boe_3"},
-{label:"initiator_1",value:"initiator_1"},
-{label:"initiator_2",value:"initiator_2"}]
+  const roles =
+    Array.isArray(roleData) &&
+    roleData?.map((r) => ({
+      label: r.name,
+      value: r.id,
+    }));
+
+
 
   const updateParams = ({ page, search, status, role_id }) => {
     const params = {};
@@ -48,7 +53,7 @@ const Agent = () => {
   useEffect(() => {
     if (!openEditModal && !openModal) {
       dispatch(
-        getAllAgents({
+        getAllAdminUsers({
           search: searchQuery,
           page,
           status,
@@ -73,10 +78,10 @@ const Agent = () => {
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
-            <h2 className="font-semibold text-gray-800">All Agents</h2>
+          <h2 className="font-semibold text-gray-800">All Admin Users</h2>
 
           <div className="flex gap-3">
-                   <button
+                          <button
   onClick={() => setOpenModal(true)}
   className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
 >
@@ -96,7 +101,7 @@ const Agent = () => {
       />
     </svg>
 
-    Add New Agent
+    Add New Admin User
   </span>
 
   <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
@@ -106,8 +111,8 @@ const Agent = () => {
               label="Status"
               value={status || "All"}
               options={[
-                { label: "Active", value: 1 },
-                { label: "Inactive", value: 0 },
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
               ]}
               onChange={(val) =>
                 updateParams({
@@ -141,8 +146,8 @@ const Agent = () => {
             <thead className="bg-gray-50 text-gray-500">
               <tr>
                 <th className="text-left ps-5 px-3 py-3 w-[150px]">Name</th>
-                <th className="text-left px-3 py-3 w-[150px]">Username</th>
                 <th className="text-left px-3 py-3 w-[200px]">Email</th>
+                <th className="text-left px-3 py-3 w-[100px]">Mobile</th>
                 <th className="text-left px-3 py-3 w-[100px]">Role</th>
                 <th className="text-left px-3 py-3 w-[80px]">Status</th>
                 <th className="text-center px-3 py-3 w-[155px]">Action</th>
@@ -150,15 +155,15 @@ const Agent = () => {
             </thead>
 
             <tbody className="divide-y">
-              {agentLoading ? (
+              {adminUserLoading ? (
                 /* ================= SKELETON ================= */
                 <TableSkeleton
                   rows={5}
                   columns={[
                     { width: "w-32 h-4" }, // Name
-                    { width: "w-32 h-4" }, // Username
+                    { width: "w-32 h-4" }, // Email
                     { width: "w-24 h-4" }, // Mobile
-                    { width: "w-24 h-4" }, // Mobile
+                    { width: "w-24 h-4" }, // Role
                     { width: "w-20 h-4" }, // Status
                   ]}
                   actionColumn
@@ -175,11 +180,11 @@ const Agent = () => {
                       </div>
 
                       <p className="text-gray-600 font-medium">
-                        No agent found
+                        No admin users found
                       </p>
 
                       <p className="text-sm text-gray-400 mt-1">
-                        Try adjusting filters or add a new agent
+                        Try adjusting filters or add a new admin user
                       </p>
                     </div>
                   </td>
@@ -195,35 +200,41 @@ const Agent = () => {
                       {item.name || "—"}
                     </td>
 
-                    <td className="px-3 truncate cursor-pointer py-5 text-gray-700">
-                      <span title={item.username}>{item.username || "—"}</span>
-                    </td>
-
                     <td className="px-3 cursor-pointer py-5 text-gray-700 truncate max-w-[260px]">
                       <span title={item.email}>{item.email || "—"}</span>
                     </td>
 
-               
-                    <td className="px-3 py-5 capitalize text-gray-700 whitespace-nowrap">
-                      {item?.role || "—"}
+                    <td className="px-3 py-5 text-gray-700 whitespace-nowrap">
+                      {item.phone || "—"}
                     </td>
+               <td className="px-3 py-5 whitespace-nowrap">
+  <div className="flex flex-wrap gap-2">
+    {item?.roles?.map((role, index) => (
+      <span
+        key={index}
+        className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 border border-indigo-100"
+      >
+        {role}
+      </span>
+    ))}
+  </div>
+</td>
                     <td className="px-3 py-5">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
-                          item.status
-                            ? "bg-green-100 text-green-600"
+                          item.is_active ? "bg-green-100 text-green-600"
                             : "bg-red-100 text-red-600"
                         }`}
                       >
-                        {item.status ? "Active" : "Inactive"}
+                        {item.is_active ? "Active" : "Inactive"}
                       </span>
                     </td>
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
-                        {/* <button className="p-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                        <button className="p-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
                           <FiEye />
-                        </button> */}
+                        </button>
                         <button
                           onClick={() => {
                             setOpenEditModal(true);
@@ -243,25 +254,25 @@ const Agent = () => {
         </div>
 
         {/* PAGINATION */}
-        {!agentLoading && hasData && agentData?.meta?.pagination && (
+        {!adminUserLoading && hasData && adminUserData?.meta?.pagination && (
           <Pagination
-            data={agentData?.meta?.pagination}
+            data={adminUserData?.meta?.pagination}
             page={page}
-            label="agents"
+            label="admin users"
             onPageChange={updateParams}
             extraParams={{ search: searchQuery, status, role_id }}
           />
         )}
       </div>
-      <AddAgentModal
+      <AddAdminUserModal
         isOpen={openModal}
         onClose={() => {
           setOpenModal(false);
-          dispatch(setActiveSubTab("All Agents"));
+          dispatch(setActiveSubTab("All User"));
         }}
         roles={roles}
       />
-      <EditAgentModal
+      <EditAdminUserStatusModal
         isOpen={openEditModal}
         onClose={() => setOpenEditModal(false)}
         user={selectedUser}
@@ -271,4 +282,4 @@ const Agent = () => {
   );
 };
 
-export default Agent;
+export default AdminUser;

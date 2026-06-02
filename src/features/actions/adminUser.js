@@ -17,11 +17,12 @@ export const getAllAdminUsers = createAsyncThunk(
 
       // // ✅ Add status filter
       if (status !== "" && status !== undefined) {
-        params.append("status", status);
+        params.append("is_active", status);
       }
       if (role_id !== "" && role_id !== undefined) {
-        params.append("role_id", role_id);
+        params.append("role", role_id);
       }
+
 
       const link = `/admin/admins?${params.toString()}`;
 
@@ -65,13 +66,13 @@ export const addAdminUser = createAsyncThunk(
   },
 );
 
-export const editAdminUserStatus = createAsyncThunk(
+export const editAdminUser = createAsyncThunk(
   "/admin/admins/2",
   async ({ payload, id }, { getState, rejectWithValue }) => {
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
-      const { data } = await instance.patch(
+      const { data } = await instance.put(
         `/admin/admins/${id}`,
         payload,
         {

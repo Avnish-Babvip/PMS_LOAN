@@ -8,8 +8,8 @@ import TableSkeleton from "../../components/TableSkeleton";
 import AddAdminUserModal from "../../components/Modal/AdminUser/AddAdminUser";
 import FilterSelect from "../../components/FilterSelect";
 import { getAllRoles } from "../../features/actions/role";
-import { EditAdminUserStatusModal } from "../../components/Modal/AdminUser/EditAdminUserStatus";
 import { setActiveSubTab } from "../../features/slices/references";
+import EditAdminUserModal from "../../components/Modal/AdminUser/EditAdminUser";
 
 const AdminUser = () => {
   const { state } = useLocation();
@@ -36,7 +36,7 @@ const AdminUser = () => {
     Array.isArray(roleData) &&
     roleData?.map((r) => ({
       label: r.name,
-      value: r.id,
+      value: r.name,
     }));
 
 
@@ -111,8 +111,8 @@ const AdminUser = () => {
               label="Status"
               value={status || "All"}
               options={[
-                { label: "Active", value: "active" },
-                { label: "Inactive", value: "inactive" },
+                { label: "Active", value: 1 },
+                { label: "Inactive", value: 0 },
               ]}
               onChange={(val) =>
                 updateParams({
@@ -272,7 +272,7 @@ const AdminUser = () => {
         }}
         roles={roles}
       />
-      <EditAdminUserStatusModal
+      <EditAdminUserModal
         isOpen={openEditModal}
         onClose={() => setOpenEditModal(false)}
         user={selectedUser}
