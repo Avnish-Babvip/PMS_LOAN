@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import TableSkeleton from "../../components/TableSkeleton";
 import FilterSelect from "../../components/FilterSelect";
@@ -130,7 +130,7 @@ const Bank = () => {
                     { width: "w-20 h-4" }, // Status
                   ]}
                   actionColumn
-                  actionCount={1}
+                  actionCount={2}
                   actionWidth="w-32 h-8"
                 />
               ) : !hasData ? (
@@ -177,6 +177,12 @@ const Bank = () => {
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
 
+                        <Link
+                          to={`form/${item.bank_name}`}
+                          className="p-2 px-3 flex items-center gap-2  bg-blue-100 text-blue-500 rounded-lg hover:bg-blue-200"
+                        >
+                          <FiEdit2 /> Form Configuration
+                        </Link>
                         <button
                           onClick={() => {
                             setOpenEditModal(true);

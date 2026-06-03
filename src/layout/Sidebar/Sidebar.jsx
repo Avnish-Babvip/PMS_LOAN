@@ -133,11 +133,15 @@ const Sidebar = ({ closeSidebar }) => {
       {/* Scrollable Section */}
       <div className="flex-1 overflow-y-auto px-3 py-6 scrollbar-thin  scrollbar-thumb-gray-700">
         {/* Logo */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-4">
           <Link to="/">
-            <div className="font-extrabold text-xl text-white">
-             PMS
-            </div>
+           <div className="flex items-center justify-center">
+  <img
+    src="/logo.png"
+    alt="PMS Logo"
+    className="h-14 rounded-xl w-auto object-contain"
+  />
+</div>
           </Link>
         </div>
 

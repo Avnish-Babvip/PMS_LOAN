@@ -14,6 +14,7 @@ import Permission from "../pages/Permission/Permission";
 import AdminUser from "../pages/AdminUser/AdminUser";
 import Agent from "../pages/Agent/Agent";
 import Bank from "../pages/Bank/Bank";
+import Form from "../pages/Form/Form";
 
 export const appRouter = createBrowserRouter([
   /* ---------------- PUBLIC ROUTES ---------------- */
@@ -90,6 +91,14 @@ export const appRouter = createBrowserRouter([
           element: (
             <ProtectedRoute requiredPermission="view permissions">
               <Bank />
+            </ProtectedRoute>
+          ),
+        },
+  {
+          path: "bank/form/:bank",
+          element: (
+            <ProtectedRoute requiredPermission="view permissions">
+              <Form />
             </ProtectedRoute>
           ),
         },

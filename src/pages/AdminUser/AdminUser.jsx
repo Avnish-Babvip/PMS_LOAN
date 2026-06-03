@@ -232,9 +232,7 @@ const AdminUser = () => {
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
-                        <button className="p-2 px-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-                          <FiEye />
-                        </button>
+                  
                         <button
                           onClick={() => {
                             setOpenEditModal(true);

@@ -173,7 +173,7 @@ function AccountSection({}) {
         </div>
 
         <span className="hidden md:block">
-          Hi, {admin?.name?.split(" ")[0] || "User"}
+          Hi, {admin?.name|| "User"}
         </span>
 
         <FiChevronDown

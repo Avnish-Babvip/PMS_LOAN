@@ -12,6 +12,7 @@ import dashboard from "./slices/dashboard";
 import maintenance from "./slices/maintenance";
 import agent from "./slices/agent";
 import bank from "./slices/bank";
+import form from "./slices/form";
 
 
 const rootReducer = combineReducers({
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   permission,
   agent,
   bank,
+  form,
   maintenance,
 
 });

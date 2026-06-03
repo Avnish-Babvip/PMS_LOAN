@@ -32,7 +32,6 @@ const to = (Math.min(
     (_, i) => startPage + i,
   );
 
-  console.log(pages)
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-5 pt-3 pb-5">
