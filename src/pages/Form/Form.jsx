@@ -13,6 +13,7 @@ import { HiX } from "react-icons/hi";
 import { FiUploadCloud } from "react-icons/fi";
 import { Spinner } from "../../components/Loader/Spinner";
 import { Input } from "../../components/ReusableInputs";
+import EditBankFormModal from "../../components/Modal/Form/EditBankForm";
 
 const Form = () => {
   const { bank } = useParams();
@@ -24,8 +25,6 @@ const Form = () => {
   const { bankData } = useSelector(
     (state) => state.bank,
   );
-  const { roleData } = useSelector((state) => state.role);
-
   const bankId = bankData?.data.find(
   (item) => item.bank_name === bank
 )?.id;
@@ -252,9 +251,14 @@ const Form = () => {
   bankId={bankId}
   onClose={() => {
     setOpenModal(false);
-    dispatch(setActiveSubTab("List Bank Forms"));
   }}
 />
+<EditBankFormModal   isOpen={openEditModal}
+  selectedForm={selectedUser}
+  onClose={() => {
+    setOpenEditModal(false);
+  }}
+  />
      
     </>
   );

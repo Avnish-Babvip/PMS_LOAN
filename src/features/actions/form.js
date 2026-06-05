@@ -40,6 +40,28 @@ export const getAllForms = createAsyncThunk(
   },
 );
 
+export const getFormDetails = createAsyncThunk(
+  "admin/forms/details",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      // ✅ Get token directly from store
+      const loginToken = getState().authentication?.adminData?.token;
+      const link = `/admin/forms/${id}`;
+
+      const { data } = await instance.get(link, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${loginToken}`,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || "Failed ");
+    }
+  },
+);
+
 export const uploadFormSheet = createAsyncThunk(
   "/admin/uploadFormSheet",
   async ({bankId,payload}, { getState, rejectWithValue }) => {
@@ -65,15 +87,81 @@ export const uploadFormSheet = createAsyncThunk(
   },
 );
 
-export const editForm = createAsyncThunk(
-  "/admin/forms/2",
+export const editBasicDetails = createAsyncThunk(
+  "/admin/forms/basic/2",
   async ({ payload, id }, { getState, rejectWithValue }) => {
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
       const { data } = await instance.put(
-        `/admin/admins/${id}`,
+        `/admin/forms/${id}`,
         payload,
+        {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${loginToken}`,
+          },
+        },
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || "Failed ");
+    }
+  },
+);
+export const editFormField = createAsyncThunk(
+  "/admin/forms/field/2",
+  async ({ payload, id }, { getState, rejectWithValue }) => {
+    try {
+      // ✅ Get token directly from store
+      const loginToken = getState().authentication?.adminData?.token;
+      const { data } = await instance.put(
+        `/admin/fields/${id}`,
+        payload,
+        {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${loginToken}`,
+          },
+        },
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || "Failed ");
+    }
+  },
+);
+export const addFormField = createAsyncThunk(
+  "/admin/forms/field/2/add",
+  async ({ payload, id }, { getState, rejectWithValue }) => {
+    try {
+      // ✅ Get token directly from store
+      const loginToken = getState().authentication?.adminData?.token;
+      const { data } = await instance.post(
+        `/admin/forms/${id}/fields`,
+        payload,
+        {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${loginToken}`,
+          },
+        },
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || "Failed ");
+    }
+  },
+);
+
+export const deleteFormField = createAsyncThunk(
+  "/admin/forms/field/2/delete",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      // ✅ Get token directly from store
+      const loginToken = getState().authentication?.adminData?.token;
+      const { data } = await instance.delete(
+        `/admin/fields/${id}`,
         {
           headers: {
             "Content-type": "application/json",

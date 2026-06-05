@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 import {
-  editForm,
+  addFormField,
+  deleteFormField,
+  editBasicDetails,
+  editFormField,
   getAllForms,
+  getFormDetails,
   uploadFormSheet,
 } from "../actions/form";
 
@@ -19,7 +23,10 @@ const formattedDate = new Date().toLocaleString("en-US", {
 const initialState = {
   errorMessage: "",
   formLoading: false,
+  fieldLoading: false,
+  basicLoading: false,
   formData: {},
+  formDetailData: {},
 };
 
 // ---------------------------------------------------------------------------------------
@@ -46,6 +53,19 @@ const formSlice = createSlice({
           description: formattedDate,
         });
       })
+      .addCase(getFormDetails.pending, (state) => {
+        state.errorMessage = "";
+      })
+      .addCase(getFormDetails.fulfilled, (state, action) => {
+        state.errorMessage = "";
+        state.formDetailData = action.payload.data;
+      })
+      .addCase(getFormDetails.rejected, (state, action) => {
+        state.errorMessage = action.payload || "Failed";
+        toast(action.payload, {
+          description: formattedDate,
+        });
+      })
       .addCase(uploadFormSheet.pending, (state) => {
         state.errorMessage = "";
         state.formLoading = true;
@@ -53,6 +73,7 @@ const formSlice = createSlice({
       .addCase(uploadFormSheet.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.formLoading = false;
+         state.formDetailData = action.payload.data;
         toast("File uploaded successfully.", {
           description: formattedDate,
         });
@@ -83,20 +104,69 @@ const formSlice = createSlice({
           });
         }
       })
-      .addCase(editForm.pending, (state) => {
+      .addCase(editBasicDetails.pending, (state) => {
         state.errorMessage = "";
-        state.formLoading = true;
+        state.basicLoading = true;
       })
-      .addCase(editForm.fulfilled, (state, action) => {
+      .addCase(editBasicDetails.fulfilled, (state, action) => {
         state.errorMessage = "";
-        state.formLoading = false;
-        toast("Admin user updated successfully.", {
+        state.basicLoading = false;
+         state.formDetailData = action.payload.data;
+        toast("Basic details updated successfully.", {
           description: formattedDate,
         });
       })
-      .addCase(editForm.rejected, (state, action) => {
+      .addCase(editBasicDetails.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        state.formLoading = false;
+        state.basicLoading = false;
+        toast(action.payload, {
+          description: formattedDate,
+        });
+      })
+      .addCase(editFormField.pending, (state) => {
+        state.errorMessage = "";
+        state.fieldLoading = true;
+      })
+      .addCase(editFormField.fulfilled, (state, action) => {
+        state.errorMessage = "";
+        state.fieldLoading = false;
+        toast("Field details updated successfully.", {
+          description: formattedDate,
+        });
+      })
+      .addCase(editFormField.rejected, (state, action) => {
+        state.errorMessage = action.payload || "Failed";
+        state.fieldLoading = false;
+        toast(action.payload, {
+          description: formattedDate,
+        });
+      })
+      .addCase(addFormField.pending, (state) => {
+        state.errorMessage = "";
+      })
+      .addCase(addFormField.fulfilled, (state, action) => {
+        state.errorMessage = "";
+        toast("Field added successfully.", {
+          description: formattedDate,
+        });
+      })
+      .addCase(addFormField.rejected, (state, action) => {
+        state.errorMessage = action.payload || "Failed";
+        toast(action.payload, {
+          description: formattedDate,
+        });
+      })
+      .addCase(deleteFormField.pending, (state) => {
+        state.errorMessage = "";
+      })
+      .addCase(deleteFormField.fulfilled, (state, action) => {
+        state.errorMessage = "";
+        toast("Field deleted successfully.", {
+          description: formattedDate,
+        });
+      })
+      .addCase(deleteFormField.rejected, (state, action) => {
+        state.errorMessage = action.payload || "Failed";
         toast(action.payload, {
           description: formattedDate,
         });

@@ -12,7 +12,7 @@ const AdminDefaultLayout = () => {
   return (
     <ErrorBoundary>
       {/* PAGE WRAPPER – blocks horizontal scroll */}
-      <div className="flex w-full overflow-x-hidden h-screen text-white">
+      <div className="flex w-full overflow-x-hidden h-screen text-gray-500">
         {/* DESKTOP SIDEBAR – fixed on left */}
         <div className="hidden lg:block w-[280px] bg-[#262D34] flex-shrink-0">
           <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
