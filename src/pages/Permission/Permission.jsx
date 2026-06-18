@@ -54,7 +54,7 @@ const Permission = () => {
     <>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
           <h2 className="font-semibold text-gray-800">All Permissions</h2>
 
           <div className="flex gap-3">

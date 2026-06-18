@@ -9,11 +9,10 @@ import adminUser from "./slices/adminUser";
 import role from "./slices/role";
 import permission from "./slices/permission";
 import dashboard from "./slices/dashboard";
-import maintenance from "./slices/maintenance";
 import agent from "./slices/agent";
 import bank from "./slices/bank";
 import form from "./slices/form";
-
+import caseSlice from "./slices/case";
 
 const rootReducer = combineReducers({
   references,
@@ -25,8 +24,7 @@ const rootReducer = combineReducers({
   agent,
   bank,
   form,
-  maintenance,
-
+  caseSlice,
 });
 
 // Redux-persist configuration

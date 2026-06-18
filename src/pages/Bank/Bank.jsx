@@ -14,9 +14,7 @@ const Bank = () => {
   const { state } = useLocation();
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { bankData, bankLoading } = useSelector(
-    (state) => state.bank,
-  );
+  const { bankData, bankLoading } = useSelector((state) => state.bank);
 
   const [selectedUser, setSelectedUser] = useState({});
   const [openModal, setOpenModal] = useState(false);
@@ -48,7 +46,6 @@ const Bank = () => {
     }
   }, [openModal, openEditModal, page, searchQuery, status]);
 
-
   useEffect(() => {
     if (state?.openModal) {
       setOpenModal(true);
@@ -59,35 +56,34 @@ const Bank = () => {
     <>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
           <h2 className="font-semibold text-gray-800">All Banks</h2>
 
           <div className="flex gap-3">
-                          <button
-  onClick={() => setOpenModal(true)}
-  className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
->
-  <span className="relative z-10 flex items-center gap-2">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4v16m8-8H4"
-      />
-    </svg>
+            <button
+              onClick={() => setOpenModal(true)}
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add New Bank
+              </span>
 
-    Add New Bank
-  </span>
-
-  <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-</button>
+              <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            </button>
 
             <FilterSelect
               label="Status"
@@ -104,8 +100,6 @@ const Bank = () => {
                 })
               }
             />
-
-
           </div>
         </div>
 
@@ -166,7 +160,8 @@ const Bank = () => {
                     <td className="px-3 py-5">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
-                          item.status ? "bg-green-100 text-green-600"
+                          item.status
+                            ? "bg-green-100 text-green-600"
                             : "bg-red-100 text-red-600"
                         }`}
                       >
@@ -176,7 +171,6 @@ const Bank = () => {
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
-
                         <Link
                           to={`form/${item.bank_name}`}
                           className="p-2 px-3 flex items-center gap-2  bg-blue-100 text-blue-500 rounded-lg hover:bg-blue-200"

@@ -53,15 +53,13 @@ const Sidebar = ({ closeSidebar }) => {
     if (closeSidebar) closeSidebar();
   };
 
-
-  const menuItems =
-  [
+  const menuItems = [
     {
       label: "Dashboard",
       icon: TbDashboardFilled,
       url: "/admin",
     },
-        {
+    {
       label: "Role & Permissions",
       icon: FiShield,
       children: [
@@ -71,10 +69,10 @@ const Sidebar = ({ closeSidebar }) => {
           url: "/admin/role",
           state: { openModal: true },
         },
-         { name: "All Permissions", url: "/admin/permission" },
+        { name: "All Permissions", url: "/admin/permission" },
       ],
     },
-        {
+    {
       label: "Manage Admin Users",
       icon: FiUserCheck,
       children: [
@@ -86,7 +84,7 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
-        {
+    {
       label: "Manage Agents",
       icon: FiUserCheck,
       children: [
@@ -98,7 +96,7 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
-        {
+    {
       label: "Bank Management",
       icon: FiUserCheck,
       children: [
@@ -110,23 +108,19 @@ const Sidebar = ({ closeSidebar }) => {
         },
       ],
     },
-
     {
-      label: "Maintenance",
-      icon: FiFileText,
+      label: "Case Management",
+      icon: FiUserCheck,
       children: [
-        { name: "Maintenance Mode", url: "/admin/maintenance/mode" },
-        { name: "Maintenance Contact", url: "/admin/maintenance/contact" },
+        { name: "All Cases", url: "/admin/case" },
+        {
+          name: "Add Case",
+          url: "/admin/case",
+          state: { openModal: true },
+        },
       ],
     },
-    {
-      label: "Settings",
-      icon: TbSettingsFilled,
-      children: [
-        { name: "Site Settings", url: "/admin/settings/site-settings" },
-      ],
-    },
-  ]
+  ];
 
   return (
     <div className="flex flex-col h-screen bg-[#111827] text-gray-400 shadow-xl">
@@ -135,13 +129,13 @@ const Sidebar = ({ closeSidebar }) => {
         {/* Logo */}
         <div className="flex justify-center mb-4">
           <Link to="/">
-           <div className="flex items-center justify-center">
-  <img
-    src="/logo.png"
-    alt="PMS Logo"
-    className="h-14 rounded-xl w-auto object-contain"
-  />
-</div>
+            <div className="flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="PMS Logo"
+                className="h-14 rounded-xl w-auto object-contain"
+              />
+            </div>
           </Link>
         </div>
 

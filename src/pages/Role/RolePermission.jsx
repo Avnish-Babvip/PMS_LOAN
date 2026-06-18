@@ -12,7 +12,7 @@ import AddRolePermissionModal from "../../components/Modal/Role/AddRolePermissio
 
 const RolePermission = () => {
   const dispatch = useDispatch();
-  const { id,role } = useParams();
+  const { id, role } = useParams();
   const { rolePermissionData, roleLoading } = useSelector(
     (state) => state.role,
   );
@@ -33,12 +33,10 @@ const RolePermission = () => {
     <>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
           <h2 className="font-semibold text-gray-800">
             All Permissions : {role} (Role)
           </h2>
-
- 
         </div>
 
         {/* TABLE */}
@@ -86,7 +84,6 @@ const RolePermission = () => {
                     <td className="capitalize ps-5 px-3 py-5 text-gray-700">
                       {item.name || "—"}
                     </td>
-           
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
