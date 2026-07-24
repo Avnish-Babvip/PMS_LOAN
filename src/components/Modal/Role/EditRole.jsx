@@ -9,27 +9,21 @@ import { editRole } from "../../../features/actions/role";
 import { getAllPermissions } from "../../../features/actions/permission";
 import { Spinner } from "../../Loader/Spinner";
 
-export const EditRoleModal = ({
-  isOpen,
-  onClose,
-  role,
-}) => {
+export const EditRoleModal = ({ isOpen, onClose, role }) => {
   const dispatch = useDispatch();
-  console.log(role)
 
   const { roleLoading } = useSelector((state) => state.role);
 
-    const { permissionData } = useSelector(
-    (state) => state.permission,
-  );
+  const { permissionData } = useSelector((state) => state.permission);
 
-    const data =
+  const data =
     (Array.isArray(permissionData?.data) && permissionData?.data) || [];
 
   const {
     register,
     handleSubmit,
-     reset,
+    reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -38,27 +32,19 @@ export const EditRoleModal = ({
     },
   });
 
-  useEffect(() => {
-  if (role && isOpen) {
-    reset({
-      name: role?.name || "",
-      permissions:
-        role?.permissions?.map((p) => p?.name) || [],
-    });
-  }
-}, [role, isOpen, reset]);
-
-  useEffect(() => {
-    if (isOpen) {
-      dispatch(getAllPermissions({ per_page: 1000 }));
-    }
-  }, [dispatch, isOpen, role]);
+  const selectedPermissions = watch("permissions") || [];
 
   const onSubmit = (data) => {
+    const permissions = new Set(data.permissions || []);
+    permissions.add("view dashboard");
+
     dispatch(
       editRole({
-        payload: data,
         id: role?.id,
+        payload: {
+          ...data,
+          permissions: [...permissions],
+        },
       }),
     )
       .unwrap()
@@ -67,13 +53,34 @@ export const EditRoleModal = ({
       });
   };
 
+  useEffect(() => {
+    if (role && isOpen) {
+      const permissions = role?.permissions?.map((p) => p?.name) || [];
+
+      if (!permissions.includes("view dashboard")) {
+        permissions.push("view dashboard");
+      }
+
+      reset({
+        name: role?.name || "",
+        permissions,
+      });
+    }
+  }, [role, isOpen, reset]);
+
+  useEffect(() => {
+    if (isOpen) {
+      dispatch(getAllPermissions({ per_page: 1000 }));
+    }
+  }, [dispatch, isOpen, role]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[95vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
       >
         {/* ================= HEADER ================= */}
         <div className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
@@ -86,9 +93,7 @@ export const EditRoleModal = ({
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-white">
-                  Edit Role
-                </h2>
+                <h2 className="text-2xl font-bold text-white">Edit Role</h2>
 
                 <p className="mt-1 text-sm text-gray-300">
                   Update role details and permissions
@@ -124,7 +129,6 @@ export const EditRoleModal = ({
                   required
                   errors={errors}
                 />
-
               </div>
             </div>
 
@@ -147,29 +151,42 @@ export const EditRoleModal = ({
               </div>
 
               <div className="grid max-h-[420px] grid-cols-1 gap-3 overflow-y-auto pr-2 sm:grid-cols-2">
-                {data?.map((permission) => (
-                  <label
-                    key={permission?.id}
-                    className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4 transition-all duration-300 hover:border-indigo-200 hover:bg-indigo-50"
-                  >
-                    <input
-                      type="checkbox"
-                      value={permission?.name}
-                      {...register("permissions")}
-                      className="peer hidden"
-                    />
+                {data?.map((permission) => {
+                  const isDashboardPermission =
+                    permission.name.toLowerCase() === "view dashboard";
 
-                    <div className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-gray-300 bg-white transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-500">
-                      <FiCheck className="hidden text-sm text-white peer-checked:block" />
-                    </div>
+                  return (
+                    <label
+                      key={permission.id}
+                      className={`group flex items-center gap-3 rounded-2xl border p-4 transition-all duration-300 ${
+                        isDashboardPermission
+                          ? "cursor-not-allowed border-indigo-200 bg-indigo-50"
+                          : "cursor-pointer border-gray-200 bg-gray-50 hover:border-indigo-200 hover:bg-indigo-50"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        value={permission.name}
+                        {...register("permissions")}
+                        disabled={isDashboardPermission}
+                        checked={
+                          isDashboardPermission
+                            ? true
+                            : selectedPermissions.includes(permission.name)
+                        }
+                        className="peer hidden"
+                      />
 
-                    <div>
+                      <div className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-gray-300 bg-white transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-500">
+                        <FiCheck className="hidden text-sm text-white peer-checked:block" />
+                      </div>
+
                       <p className="text-sm font-medium capitalize text-gray-700">
-                        {permission?.name}
+                        {permission.name}
                       </p>
-                    </div>
-                  </label>
-                ))}
+                    </label>
+                  );
+                })}
               </div>
             </div>
           </div>

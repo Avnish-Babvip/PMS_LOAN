@@ -13,7 +13,7 @@ const DeleteModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-      <div className="bg-[#262D34] w-full max-w-md rounded-xl p-6 text-white border border-[#232335] shadow-xl relative">
+      <div className="bg-[#262D34] w-full max-w-xl rounded-xl p-6 text-white border border-[#232335] shadow-xl relative">
         {/* Close */}
         <button
           onClick={onClose}

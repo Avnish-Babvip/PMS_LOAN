@@ -8,17 +8,10 @@ import { Input, SelectWithId } from "../../ReusableInputs";
 import { Spinner } from "../../Loader/Spinner";
 import { editAgent } from "../../../features/actions/agent";
 
-const EditAgentModal = ({
-  isOpen,
-  onClose,
-  roles,
-  user,
-}) => {
+const EditAgentModal = ({ isOpen, onClose, roles, user }) => {
   const dispatch = useDispatch();
 
-  const { adminUserLoading } = useSelector(
-    (state) => state.adminUser,
-  );
+  const { adminUserLoading } = useSelector((state) => state.adminUser);
 
   const {
     register,
@@ -66,7 +59,7 @@ const EditAgentModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[95vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
       >
         {/* Header */}
         <div className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
@@ -79,9 +72,7 @@ const EditAgentModal = ({
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-white">
-                  Edit Agent
-                </h2>
+                <h2 className="text-2xl font-bold text-white">Edit Agent</h2>
 
                 <p className="mt-1 text-sm text-gray-300">
                   Update agent account information
@@ -150,13 +141,9 @@ const EditAgentModal = ({
                   {...register("status")}
                   className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-[#79BF28]"
                 >
-                  <option value={1}>
-                    Active
-                  </option>
+                  <option value={1}>Active</option>
 
-                  <option value={0}>
-                    Inactive
-                  </option>
+                  <option value={0}>Inactive</option>
                 </select>
               </div>
             </div>
@@ -179,11 +166,7 @@ const EditAgentModal = ({
               type="submit"
               className="flex min-w-[180px] items-center justify-center rounded-2xl bg-gradient-to-r from-[#79BF28] to-[#5ea51f] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl"
             >
-              {adminUserLoading ? (
-                <Spinner />
-              ) : (
-                "Update Agent"
-              )}
+              {adminUserLoading ? <Spinner /> : "Update Agent"}
             </button>
           </div>
         </div>

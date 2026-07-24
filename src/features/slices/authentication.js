@@ -25,7 +25,6 @@ const initialState = {
   adminData: {},
   errorMessage: "",
   isPasswordChanged: false,
-
 };
 
 // ---------------------------------------------------------------------------------------
@@ -55,18 +54,14 @@ const authSlice = createSlice({
         state.errorMessage = "";
         state.isAdminLoggedIn = true;
         state.adminData = action.payload.data;
-        toast("Admin successfully logged in.", {
-          description: formattedDate,
-        });
+        toast.success("Admin successfully logged in.");
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload || "Failed to login API.";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
-    
+
       .addCase(forgotPassword.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = "";
@@ -74,16 +69,12 @@ const authSlice = createSlice({
       .addCase(forgotPassword.fulfilled, (state, action) => {
         state.isLoading = false;
         state.errorMessage = "";
-        toast("Password reset link sent to email.", {
-          description: formattedDate,
-        });
+        toast.success("Password reset link sent to email.");
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload || "Failed.";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(resetForgotPassword.pending, (state) => {
         state.isLoading = true;
@@ -94,17 +85,13 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.errorMessage = "";
         state.isPasswordChanged = true;
-        toast("Password changed successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Password changed successfully.");
       })
       .addCase(resetForgotPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.isPasswordChanged = false;
         state.errorMessage = action.payload || "Failed.";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(adminLogout.pending, (state) => {
         state.errorMessage = "";
@@ -113,15 +100,11 @@ const authSlice = createSlice({
         state.errorMessage = "";
         state.isAdminLoggedIn = false;
         state.adminData = {};
-        toast("Log out Successful.", {
-          description: formattedDate,
-        });
+        toast.success("Log out Successful.");
       })
       .addCase(adminLogout.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed to logout API.";
-        toast("Logout failed. Please try again", {
-          description: formattedDate,
-        });
+        toast.error("Logout failed. Please try again");
       })
       .addCase(updateAdminProfile.pending, (state) => {
         state.errorMessage = "";
@@ -129,17 +112,13 @@ const authSlice = createSlice({
       .addCase(updateAdminProfile.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.adminData = action.payload.data;
-        toast("Profile updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Profile updated successfully.");
       })
       .addCase(updateAdminProfile.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
-     
+
       .addCase(changePassword.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = "";
@@ -147,18 +126,13 @@ const authSlice = createSlice({
       .addCase(changePassword.fulfilled, (state, action) => {
         state.isLoading = false;
         state.errorMessage = "";
-        toast("Password updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Password updated successfully.");
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload || "Failed";
-        toast(action.payload, {
-          description: formattedDate,
-        });
-      })
-
+        toast.error(action.payload);
+      });
   },
 });
 

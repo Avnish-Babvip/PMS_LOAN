@@ -1,30 +1,45 @@
 import React, { useState } from "react";
 import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { Header } from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
+import { useSelector } from "react-redux";
 
 const AdminDefaultLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
+  const { isAdminLoggedIn } = useSelector((state) => state.authentication);
 
+  if (!isAdminLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <ErrorBoundary>
-      {/* PAGE WRAPPER – blocks horizontal scroll */}
-      <div className="flex w-full overflow-x-hidden h-screen text-gray-500">
-        {/* DESKTOP SIDEBAR – fixed on left */}
-        <div className="hidden lg:block w-[280px] bg-[#262D34] flex-shrink-0">
-          <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-        </div>
-
-        {/* MOBILE SIDEBAR */}
+      <div className="flex h-screen w-full overflow-hidden text-gray-500">
+        {/* Desktop Sidebar */}
         <div
-          className={`fixed top-0 left-0 h-full w-[280px] bg-[#262D34] z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-[100%]"
+          className={`hidden lg:block bg-[#262D34] transition-all duration-300 ${
+            collapsed ? "w-20" : "w-[280px]"
           }`}
         >
           <Sidebar
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            activeMenu={activeMenu}
+            setActiveMenu={setActiveMenu}
+          />
+        </div>
+
+        {/* Mobile Sidebar */}
+        <div
+          className={`fixed top-0 left-0 h-full w-[280px] bg-[#262D34] z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <Sidebar
+            collapsed={false}
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             closeSidebar={() => setSidebarOpen(false)}
@@ -33,17 +48,20 @@ const AdminDefaultLayout = () => {
 
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-[#5d7186bf]/50 z-40 lg:hidden"
+            className="fixed inset-0 z-40 bg-[#5d7186bf]/50 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
-        {/* RIGHT SIDE (header + outlet) */}
-        <div className="flex-1 flex flex-col  min-w-0">
-          <Header setSidebarOpen={setSidebarOpen} />
+        {/* Right Side */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Header
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            setSidebarOpen={setSidebarOpen}
+          />
 
-          {/* OUTLET AREA – only this scrolls horizontally */}
-          <main className="flex-1 -mt-px bg-[#f9f7f7] overflow-y-auto">
+          <main className="flex-1 overflow-y-auto bg-[#f9f7f7]">
             <div className="w-full p-5">
               <Outlet />
             </div>

@@ -40,7 +40,7 @@ const Login = () => {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   };
   const dispatch = useDispatch();
-  const { isLoading,isAdminLoggedIn } = useSelector(
+  const { isLoading, isAdminLoggedIn } = useSelector(
     (state) => state.authentication,
   );
   const navigate = useNavigate();
@@ -57,11 +57,11 @@ const Login = () => {
     reset();
   };
 
-   useEffect(() => {
-     if (isAdminLoggedIn) {
-       navigate("/");
-     }
-   }, [isAdminLoggedIn]);
+  useEffect(() => {
+    if (isAdminLoggedIn) {
+      navigate("/");
+    }
+  }, [isAdminLoggedIn]);
   // Auto slide
   useEffect(() => {
     const timer = setInterval(nextSlide, 4000);
@@ -137,14 +137,14 @@ const Login = () => {
               </div>
             )}
           </div>
-          <div className="text-right mb-4">
+          {/* <div className="text-right mb-4">
             <Link
               to={"/forgot-password"}
               className="text-[#EF4444] text-sm hover:underline"
             >
               Forgot Password
             </Link>
-          </div>
+          </div> */}
 
           <button
             disabled={isLoading}
@@ -180,15 +180,6 @@ const Login = () => {
 
           {/* Overlay */}
           {/* <div className="absolute inset-0 bg-gradient-to-b "></div> */}
-
-          <div className="transition-all duration-700 absolute bottom-10 z-10">
-            <h2 className="text-3xl font-bold mb-2">{slides[current].title}</h2>
-            <h4 className="font-semibold">{slides[current].subtitle}</h4>
-            <p className="text-gray-200">{slides[current].desc}</p>
-            <p className="text-sm mt-6 opacity-70">
-              {current + 1} of {slides.length}
-            </p>
-          </div>
 
           {/* Controls */}
           <div className="absolute bottom-10 right-10 flex gap-3 z-10">

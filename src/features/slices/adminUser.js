@@ -42,9 +42,7 @@ const adminUserSlice = createSlice({
       .addCase(getAllAdminUsers.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.adminUserLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addAdminUser.pending, (state) => {
         state.errorMessage = "";
@@ -53,9 +51,7 @@ const adminUserSlice = createSlice({
       .addCase(addAdminUser.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.adminUserLoading = false;
-        toast("Admin user added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Admin user added successfully.");
       })
       .addCase(addAdminUser.rejected, (state, action) => {
         state.adminUserLoading = false;
@@ -66,9 +62,7 @@ const adminUserSlice = createSlice({
         if (payload?.errors) {
           Object.values(payload.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -78,9 +72,7 @@ const adminUserSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       })
       .addCase(editAdminUser.pending, (state) => {
@@ -90,16 +82,12 @@ const adminUserSlice = createSlice({
       .addCase(editAdminUser.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.adminUserLoading = false;
-        toast("Admin user updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Admin user updated successfully.");
       })
       .addCase(editAdminUser.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.adminUserLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       });
   },
 });

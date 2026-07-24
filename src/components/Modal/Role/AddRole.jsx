@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { HiX } from "react-icons/hi";
 import { FiShield, FiCheck } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Input, Textarea } from "../../ReusableInputs";
 import { addRole } from "../../../features/actions/role";
 import { Spinner } from "../../Loader/Spinner";
@@ -14,32 +13,83 @@ const AddRoleModal = ({ isOpen, onClose }) => {
 
   const { roleLoading } = useSelector((state) => state.role);
 
-  const { permissionData } = useSelector(
-    (state) => state.permission,
-  );
+  const { permissionData } = useSelector((state) => state.permission);
 
-    const data =
+  const data =
     (Array.isArray(permissionData?.data) && permissionData?.data) || [];
 
   const {
     register,
     handleSubmit,
+    reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    if (isOpen) {
-      dispatch(getAllPermissions({ per_page: 1000 }));
-    }
-  }, [dispatch, isOpen]);
+  const selectedPermissions = watch("permissions") || [];
 
   const onSubmit = (data) => {
-    dispatch(addRole(data))
+    const permissions = new Set(data.permissions || []);
+    permissions.add("view dashboard");
+
+    dispatch(
+      addRole({
+        ...data,
+        permissions: [...permissions],
+      }),
+    )
       .unwrap()
       .then(() => {
+        reset();
         onClose();
       });
   };
+
+  useEffect(() => {
+    if (!selectedPermissions.length) return;
+
+    const updatedPermissions = new Set(selectedPermissions);
+
+    selectedPermissions.forEach((permission) => {
+      const lower = permission.toLowerCase();
+
+      if (
+        lower.startsWith("create ") ||
+        lower.startsWith("edit ") ||
+        lower.startsWith("delete ")
+      ) {
+        const resource = lower
+          .replace(/^create\s+/, "")
+          .replace(/^edit\s+/, "")
+          .replace(/^delete\s+/, "");
+
+        const viewPermission = data.find(
+          (p) => p.name.toLowerCase() === `view ${resource}`,
+        );
+
+        if (viewPermission) {
+          updatedPermissions.add(viewPermission.name);
+        }
+      }
+    });
+
+    if (updatedPermissions.size !== selectedPermissions.length) {
+      setValue("permissions", [...updatedPermissions], {
+        shouldValidate: true,
+      });
+    }
+  }, [selectedPermissions, data, setValue]);
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        permissions: ["view dashboard"],
+      });
+
+      dispatch(getAllPermissions({ per_page: 1000 }));
+    }
+  }, [dispatch, isOpen, reset]);
 
   if (!isOpen) return null;
 
@@ -47,7 +97,7 @@ const AddRoleModal = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[95vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
       >
         {/* ================= HEADER ================= */}
         <div className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
@@ -60,9 +110,7 @@ const AddRoleModal = ({ isOpen, onClose }) => {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-white">
-                  Add New Role
-                </h2>
+                <h2 className="text-2xl font-bold text-white">Add New Role</h2>
 
                 <p className="mt-1 text-sm text-gray-300">
                   Create role and assign permissions
@@ -82,28 +130,25 @@ const AddRoleModal = ({ isOpen, onClose }) => {
 
         {/* ================= BODY ================= */}
         <div className="flex-1 overflow-y-auto bg-[#f8fafc] p-8">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {/* LEFT SIDE */}
-            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-              <h3 className="mb-6 text-lg font-semibold text-gray-800">
+          <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+            {/* Role Name */}
+            <div className="mb-8">
+              <h3 className="mb-5 text-lg font-semibold text-gray-800">
                 Role Information
               </h3>
 
-              <div className="space-y-5">
-                <Input
-                  label="Role Name"
-                  name="name"
-                  placeholder="Enter role name"
-                  register={register}
-                  required
-                  errors={errors}
-                />
-
-              </div>
+              <Input
+                label="Role Name"
+                name="name"
+                placeholder="Enter role name"
+                register={register}
+                required
+                errors={errors}
+              />
             </div>
 
-            {/* RIGHT SIDE */}
-            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+            {/* Permissions */}
+            <div>
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
@@ -120,30 +165,44 @@ const AddRoleModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-h-[420px] overflow-y-auto pr-2">
-                {data?.map((permission) => (
-                  <label
-                    key={permission?.id}
-                    className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4 transition-all duration-300 hover:border-indigo-200 hover:bg-indigo-50"
-                  >
-                    <input
-                      type="checkbox"
-                      value={permission?.name}
-                      {...register("permissions")}
-                      className="hidden peer"
-                    />
+              <div className="grid max-h-[420px] grid-cols-1 gap-3 overflow-y-auto pr-2 md:grid-cols-2 xl:grid-cols-3">
+                {data?.map((permission) => {
+                  const isDashboardPermission =
+                    permission.name.toLowerCase() === "view dashboard";
 
-                    <div className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-gray-300 bg-white transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-500">
-                      <FiCheck className="hidden text-sm text-white peer-checked:block" />
-                    </div>
+                  return (
+                    <label
+                      key={permission.id}
+                      className={`group flex items-center gap-3 rounded-2xl border p-4 transition-all duration-300
+      ${
+        isDashboardPermission
+          ? "cursor-not-allowed border-indigo-200 bg-indigo-50"
+          : "cursor-pointer border-gray-200 bg-gray-50 hover:border-indigo-200 hover:bg-indigo-50"
+      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        value={permission.name}
+                        {...register("permissions")}
+                        disabled={isDashboardPermission}
+                        checked={
+                          isDashboardPermission
+                            ? true
+                            : selectedPermissions.includes(permission.name)
+                        }
+                        className="peer hidden"
+                      />
 
-                    <div>
-                      <p className="text-sm font-medium text-gray-700 capitalize">
-                        {permission?.name}
-                      </p>
-                    </div>
-                  </label>
-                ))}
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 bg-white transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-500">
+                        <FiCheck className="hidden text-sm text-white peer-checked:block" />
+                      </div>
+
+                      <span className="text-sm font-medium capitalize text-gray-700">
+                        {permission.name}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
           </div>

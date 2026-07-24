@@ -16,6 +16,9 @@ import Bank from "../pages/Bank/Bank";
 import Form from "../pages/Form/Form";
 import Case from "../pages/Case/Case";
 import DocumentVerification from "../pages/Case/DocumentVerification";
+import SubmitForm from "../pages/Case/SubmitForm";
+import ChangePassword from "../pages/Authentication/ChangePassword";
+import AgentTimeline from "../pages/AgentTimeline/AgentTimeline";
 
 export const appRouter = createBrowserRouter([
   /* ---------------- PUBLIC ROUTES ---------------- */
@@ -25,8 +28,8 @@ export const appRouter = createBrowserRouter([
     children: [
       { path: "/", element: <Navigate to="/login" /> },
       { path: "login", element: <Login /> },
-      { path: "forgot-password", element: <ForgotPassword /> },
-      { path: "reset-password", element: <ResetPassword /> },
+      // { path: "forgot-password", element: <ForgotPassword /> },
+      // { path: "reset-password", element: <ResetPassword /> },
     ],
   },
 
@@ -71,9 +74,13 @@ export const appRouter = createBrowserRouter([
             ),
           },
           {
+            path: "change-password",
+            element: <ChangePassword />,
+          },
+          {
             path: "user",
             element: (
-              <ProtectedRoute requiredPermission="view permissions">
+              <ProtectedRoute requiredPermission="manage admins">
                 <AdminUser />
               </ProtectedRoute>
             ),
@@ -81,7 +88,7 @@ export const appRouter = createBrowserRouter([
           {
             path: "agent",
             element: (
-              <ProtectedRoute requiredPermission="view permissions">
+              <ProtectedRoute requiredPermission="view agents">
                 <Agent />
               </ProtectedRoute>
             ),
@@ -89,7 +96,7 @@ export const appRouter = createBrowserRouter([
           {
             path: "bank",
             element: (
-              <ProtectedRoute requiredPermission="view permissions">
+              <ProtectedRoute requiredPermission="view banks">
                 <Bank />
               </ProtectedRoute>
             ),
@@ -97,24 +104,40 @@ export const appRouter = createBrowserRouter([
           {
             path: "bank/form/:bank",
             element: (
-              <ProtectedRoute requiredPermission="view permissions">
+              <ProtectedRoute requiredPermission="view bank forms">
                 <Form />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "agent-timelines",
+            element: (
+              <ProtectedRoute>
+                <AgentTimeline />
               </ProtectedRoute>
             ),
           },
           {
             path: "case",
             element: (
-              <ProtectedRoute requiredPermission="view permissions">
+              <ProtectedRoute requiredPermission="view cases">
                 <Case />
               </ProtectedRoute>
             ),
           },
           {
-            path: "verification-task",
+            path: "case/verification-task/:id",
             element: (
-              <ProtectedRoute requiredPermission="view permissions">
+              <ProtectedRoute requiredPermission="view case documents">
                 <DocumentVerification />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "case/form/:id",
+            element: (
+              <ProtectedRoute requiredPermission="submit case forms">
+                <SubmitForm />
               </ProtectedRoute>
             ),
           },

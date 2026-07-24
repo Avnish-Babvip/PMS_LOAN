@@ -2,26 +2,21 @@ import { useForm } from "react-hook-form";
 import { HiX } from "react-icons/hi";
 import { FiShield, FiUserPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Input, SelectWithId } from "../../ReusableInputs";
 import { addAdminUser } from "../../../features/actions/adminuser";
 import { Spinner } from "../../Loader/Spinner";
+import { useEffect } from "react";
 
-const AddAdminUserModal = ({
-  isOpen,
-  onClose,
-  roles,
-}) => {
+const AddAdminUserModal = ({ isOpen, onClose, roles }) => {
   const dispatch = useDispatch();
 
-  const { adminUserLoading } = useSelector(
-    (state) => state.adminUser,
-  );
+  const { adminUserLoading } = useSelector((state) => state.adminUser);
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -34,8 +29,7 @@ const AddAdminUserModal = ({
     },
     validate: {
       hasUppercase: (value) =>
-        /[A-Z]/.test(value) ||
-        "Must contain at least one uppercase letter",
+        /[A-Z]/.test(value) || "Must contain at least one uppercase letter",
 
       hasSpecialChar: (value) =>
         /[^A-Za-z0-9]/.test(value) ||
@@ -47,17 +41,25 @@ const AddAdminUserModal = ({
     dispatch(addAdminUser(data))
       .unwrap()
       .then(() => {
+        reset();
         onClose();
       });
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      reset();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <form
+        autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[95vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
       >
         {/* Header */}
         <div className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
@@ -123,12 +125,34 @@ const AddAdminUserModal = ({
                 rules={{
                   minLength: {
                     value: 10,
-                    message:
-                      "Mobile number must be at least 10 digits",
+                    message: "Mobile number must be 10 digits",
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: "Mobile number must be 10 digits",
+                  },
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Please enter a valid 10-digit mobile number",
                   },
                 }}
                 errors={errors}
               />
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Status
+                </label>
+
+                <select
+                  {...register("is_active")}
+                  className="w-full text-gray-700 rounded-xl border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-[#79BF28]"
+                >
+                  <option value={1}>Active</option>
+
+                  <option value={0}>Inactive</option>
+                </select>
+              </div>
 
               <Input
                 label="Password"
@@ -148,54 +172,36 @@ const AddAdminUserModal = ({
                 required
                 rules={{
                   validate: (value) =>
-                    value === password ||
-                    "Passwords do not match",
+                    value === password || "Passwords do not match",
                 }}
                 errors={errors}
               />
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Status
-                </label>
-
-                <select
-                  {...register("status")}
-                  className="w-full text-gray-700 rounded-xl border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-[#79BF28]"
-                >
-                  <option value={true}>
-                    Active
-                  </option>
-
-                  <option value={false}>
-                    Inactive
-                  </option>
-                </select>
-              </div>
 
               <div className="md:col-span-2">
-  <label className="block text-sm font-medium text-gray-700 mb-3">
-    Assign Roles
-  </label>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Assign Roles
+                </label>
 
-  <div className="grid grid-cols-1  sm:grid-cols-2 gap-3">
-    {roles?.map((role) => (
-      <label
-        className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 cursor-pointer hover:border-[#79BF28]"
-      >
-        <input
-          type="checkbox"
-          value={role.label}
-          {...register("roles")}
-          className="h-4 w-4 accent-[#79BF28]"
-        />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {roles?.map((role) => (
+                    <label
+                      key={role.id}
+                      className="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 cursor-pointer hover:border-[#79BF28]"
+                    >
+                      <input
+                        type="checkbox"
+                        value={role.label}
+                        {...register("roles")}
+                        className="mt-1 h-4 w-4 flex-shrink-0 accent-[#79BF28]"
+                      />
 
-        <span className="text-sm capitalize text-gray-700">
-          {role.label}
-        </span>
-      </label>
-    ))}
-  </div>
-</div>
+                      <span className="min-w-0 break-words text-sm text-gray-700 capitalize">
+                        {role.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -233,11 +239,7 @@ const AddAdminUserModal = ({
               type="submit"
               className="flex min-w-[180px] items-center justify-center rounded-2xl bg-gradient-to-r from-[#79BF28] to-[#5ea51f] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl"
             >
-              {adminUserLoading ? (
-                <Spinner />
-              ) : (
-                "Create Admin User"
-              )}
+              {adminUserLoading ? <Spinner /> : "Create Admin User"}
             </button>
           </div>
         </div>

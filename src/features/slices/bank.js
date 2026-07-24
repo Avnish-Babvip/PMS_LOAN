@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
-import { addBank, editBank, getAllBanks, toggleBankStatus } from "../actions/bank";
-
+import {
+  addBank,
+  editBank,
+  getAllBanks,
+  toggleBankStatus,
+} from "../actions/bank";
 
 const formattedDate = new Date().toLocaleString("en-US", {
   weekday: "long",
@@ -39,9 +43,7 @@ const bankSlice = createSlice({
       .addCase(getAllBanks.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.bankLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addBank.pending, (state) => {
         state.errorMessage = "";
@@ -50,9 +52,7 @@ const bankSlice = createSlice({
       .addCase(addBank.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.bankLoading = false;
-        toast("Bank added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Bank added successfully.");
       })
       .addCase(addBank.rejected, (state, action) => {
         state.bankLoading = false;
@@ -62,9 +62,7 @@ const bankSlice = createSlice({
         if (payload?.errors) {
           Object.values(payload?.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -74,9 +72,7 @@ const bankSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       })
       .addCase(editBank.pending, (state) => {
@@ -86,16 +82,12 @@ const bankSlice = createSlice({
       .addCase(editBank.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.bankLoading = false;
-        toast("Bank details updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Bank details updated successfully.");
       })
       .addCase(editBank.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.bankLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(toggleBankStatus.pending, (state) => {
         state.errorMessage = "";
@@ -104,18 +96,13 @@ const bankSlice = createSlice({
       .addCase(toggleBankStatus.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.bankLoading = false;
-        toast("Bank status updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Bank status updated successfully.");
       })
       .addCase(toggleBankStatus.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.bankLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
-      })
-     
+        toast.error(action.payload);
+      });
   },
 });
 

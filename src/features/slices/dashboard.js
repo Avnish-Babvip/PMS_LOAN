@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
-import { dashboard } from "../actions/dashboard";
+import { dashboard, getAllNotifications } from "../actions/dashboard";
 
 const formattedDate = new Date().toLocaleString("en-US", {
   weekday: "long",
@@ -26,23 +26,20 @@ const dashboardSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(dashboard.pending, (state) => {
+      .addCase(getAllNotifications.pending, (state) => {
         state.errorMessage = "";
         state.dashboardLoading = true;
       })
-      .addCase(dashboard.fulfilled, (state, action) => {
+      .addCase(getAllNotifications.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.dashboardLoading = false;
-        state.dashboardData = action.payload.data;
+        state.dashboardData = action.payload;
       })
-      .addCase(dashboard.rejected, (state, action) => {
+      .addCase(getAllNotifications.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.dashboardLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
-      })
-
+        toast.error(action.payload);
+      });
   },
 });
 

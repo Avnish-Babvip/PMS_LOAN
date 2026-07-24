@@ -22,6 +22,12 @@ const Form = () => {
   const { formData, formLoading } = useSelector((state) => state.form);
   const { bankData } = useSelector((state) => state.bank);
   const bankId = bankData?.data.find((item) => item.bank_name === bank)?.id;
+  const { permissions } = useSelector(
+    (state) => state.authentication.adminData.admin,
+  );
+  const canCreateForm = permissions?.includes("create bank forms");
+  const canEditForm = permissions?.includes("edit bank forms");
+  const canShowActions = canEditForm || canCreateForm;
 
   const [selectedUser, setSelectedUser] = useState({});
   const [openModal, setOpenModal] = useState(false);
@@ -30,18 +36,16 @@ const Form = () => {
   const page = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
-  const loan_type = searchParams.get("loan_type") || "";
 
   const users = formData?.data || [];
   const hasData = Array.isArray(users) && users.length > 0;
 
-  const updateParams = ({ page, search, status, loan_type }) => {
+  const updateParams = ({ page, search, status }) => {
     const params = {};
     if (page) params.page = page;
     if (search) params.search = search;
     if (status !== undefined && status !== "") params.status = status;
-    if (loan_type !== undefined && loan_type !== "")
-      params.loan_type = loan_type;
+
     setSearchParams(params);
   };
 
@@ -52,45 +56,46 @@ const Form = () => {
           search: searchQuery,
           page,
           status,
-          loan_type,
           id: bankId,
         }),
       );
     }
-  }, [openModal, openEditModal, page, searchQuery, status, loan_type]);
+  }, [openModal, openEditModal, page, searchQuery, status]);
 
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800">All Forms</h2>
 
           <div className="flex gap-3">
-            <button
-              onClick={() => setOpenModal(true)}
-              className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Upload Form Sheet
-              </span>
+            {canCreateForm && (
+              <button
+                onClick={() => setOpenModal(true)}
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  Upload Form Sheet
+                </span>
 
-              <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-            </button>
+                <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+              </button>
+            )}
 
             <FilterSelect
               label="Status"
@@ -103,7 +108,6 @@ const Form = () => {
                 updateParams({
                   status: val,
                   page: 1,
-                  loan_type,
                   search: searchQuery,
                 })
               }
@@ -115,17 +119,16 @@ const Form = () => {
 
               <input
                 type="text"
-                placeholder="Search Loan Type..."
-                value={loan_type}
+                placeholder="Search Form Name or Loan Type"
+                value={searchQuery}
                 onChange={(e) =>
                   updateParams({
-                    loan_type: e.target.value,
+                    search: e.target.value,
                     page: 1,
                     status,
-                    search: searchQuery,
                   })
                 }
-                className="w-72 rounded-xl border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-700 outline-none transition-all duration-200 focus:border-[#79BF28] focus:ring-2 focus:ring-[#79BF28]/20"
+                className="w-72 rounded-xl border border-gray-300 bg-white py-3.5 pl-10 pr-4 text-sm text-gray-700 outline-none transition-all duration-200 focus:border-[#79BF28] focus:ring-2 focus:ring-[#79BF28]/20"
               />
             </div>
           </div>
@@ -144,7 +147,9 @@ const Form = () => {
                 <th className="text-left px-3 py-3 w-[80px]">
                   Uploaded File Name
                 </th>
-                <th className="text-center px-3 py-3 w-[155px]">Action</th>
+                {canShowActions && (
+                  <th className="text-center px-3 py-3 w-[155px]">Action</th>
+                )}
               </tr>
             </thead>
 
@@ -159,14 +164,14 @@ const Form = () => {
                     { width: "w-20 h-4" }, // Status
                     { width: "w-20 h-4" }, // Status
                   ]}
-                  actionColumn
+                  actionColumn={canShowActions}
                   actionCount={1}
                   actionWidth="w-32 h-8"
                 />
               ) : !hasData ? (
                 /* ================= EMPTY STATE ================= */
                 <tr>
-                  <td colSpan={5} className="py-28">
+                  <td colSpan={canShowActions ? 5 : 4} className="py-28">
                     <div className="w-full flex flex-col items-center justify-center text-center">
                       <div className="w-14 h-14 flex items-center justify-center rounded-full bg-gray-100 mb-4">
                         <FiEye className="text-gray-400 text-xl" />
@@ -189,10 +194,10 @@ const Form = () => {
                     key={item.id}
                     className="border-b border-gray-100 hover:bg-gray-50 transition"
                   >
-                    <td className="ps-5 px-3 py-5 text-gray-700">
+                    <td className="ps-5 px-3 py-5 text-gray-700 whitespace-normal break-all">
                       {item.form_name || "—"}
                     </td>
-                    <td className="ps-5 px-3 py-5 text-gray-700">
+                    <td className="ps-5 px-3 py-5 text-gray-700 whitespace-normal break-all">
                       {item.loan_type || "—"}
                     </td>
 
@@ -212,19 +217,23 @@ const Form = () => {
                       {item.file_name || "—"}
                     </td>
 
-                    <td className="px-3 py-5">
-                      <div className="flex justify-center gap-2">
-                        <button
-                          onClick={() => {
-                            setOpenEditModal(true);
-                            setSelectedUser(item);
-                          }}
-                          className="p-2 px-3 flex items-center gap-2  bg-orange-100 text-orange-500 rounded-lg hover:bg-orange-200"
-                        >
-                          <FiEdit2 />
-                        </button>
-                      </div>
-                    </td>
+                    {canShowActions && (
+                      <td className="px-3 py-5">
+                        <div className="flex justify-center gap-2">
+                          {canEditForm && (
+                            <button
+                              onClick={() => {
+                                setOpenEditModal(true);
+                                setSelectedUser(item);
+                              }}
+                              className="p-2 px-3 flex items-center gap-2  bg-orange-100 text-orange-500 rounded-lg hover:bg-orange-200"
+                            >
+                              <FiEdit2 />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}
@@ -237,26 +246,30 @@ const Form = () => {
           <Pagination
             data={formData?.meta?.pagination}
             page={page}
-            label="admin users"
+            label="bank forms"
             onPageChange={updateParams}
-            extraParams={{ search: searchQuery, status, loan_type }}
+            extraParams={{ search: searchQuery, status }}
           />
         )}
       </div>
-      <UploadFormSheetModal
-        isOpen={openModal}
-        bankId={bankId}
-        onClose={() => {
-          setOpenModal(false);
-        }}
-      />
-      <EditBankFormModal
-        isOpen={openEditModal}
-        selectedForm={selectedUser}
-        onClose={() => {
-          setOpenEditModal(false);
-        }}
-      />
+      {canCreateForm && (
+        <UploadFormSheetModal
+          isOpen={openModal}
+          bankId={bankId}
+          onClose={() => {
+            setOpenModal(false);
+          }}
+        />
+      )}
+      {canEditForm && (
+        <EditBankFormModal
+          isOpen={openEditModal}
+          selectedForm={selectedUser}
+          onClose={() => {
+            setOpenEditModal(false);
+          }}
+        />
+      )}
     </>
   );
 };
@@ -265,13 +278,24 @@ export default Form;
 
 const UploadFormSheetModal = ({ isOpen, onClose, bankId }) => {
   const dispatch = useDispatch();
+  const handleDrop = (e) => {
+    e.preventDefault();
 
+    const file = e.dataTransfer.files[0];
+
+    if (file) {
+      setValue("file", file, {
+        shouldValidate: true,
+      });
+    }
+  };
   const { formLoading } = useSelector((state) => state.form);
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -292,9 +316,16 @@ const UploadFormSheetModal = ({ isOpen, onClose, bankId }) => {
     )
       .unwrap()
       .then(() => {
+        reset();
         onClose();
       });
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      reset();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -302,7 +333,7 @@ const UploadFormSheetModal = ({ isOpen, onClose, bankId }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[95vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
       >
         {/* Header */}
         <div className="shrink-0 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
@@ -377,7 +408,7 @@ const UploadFormSheetModal = ({ isOpen, onClose, bankId }) => {
                 </h4>
 
                 <p className="mt-2 text-center text-sm text-gray-500">
-                  Drag & drop your file here or
+                  Choose your file here or
                   <span className="ml-1 font-semibold text-[#79BF28]">
                     browse files
                   </span>
@@ -386,6 +417,7 @@ const UploadFormSheetModal = ({ isOpen, onClose, bankId }) => {
                 <p className="mt-2 text-xs text-gray-400">
                   Supported formats: XLSX, XLS, CSV
                 </p>
+                <p className="mt-2 text-xs text-gray-400">Max. Size: 10MB</p>
               </label>
 
               {selectedFile?.[0] && (

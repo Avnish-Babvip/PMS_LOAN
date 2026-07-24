@@ -41,14 +41,12 @@ const roleSlice = createSlice({
       .addCase(getAllRoles.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.roleLoading = false;
-        state.roleData = action.payload.data;
+        state.roleData = action.payload;
       })
       .addCase(getAllRoles.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.roleLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addRole.pending, (state) => {
         state.errorMessage = "";
@@ -57,9 +55,7 @@ const roleSlice = createSlice({
       .addCase(addRole.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.roleLoading = false;
-        toast("Role added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Role added successfully.");
       })
       .addCase(addRole.rejected, (state, action) => {
         state.roleLoading = false;
@@ -70,9 +66,7 @@ const roleSlice = createSlice({
         if (payload?.errors) {
           Object.values(payload.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -82,9 +76,7 @@ const roleSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       })
       .addCase(editRole.pending, (state) => {
@@ -94,16 +86,12 @@ const roleSlice = createSlice({
       .addCase(editRole.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.roleLoading = false;
-        toast("Role details updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Role details updated successfully.");
       })
       .addCase(editRole.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.roleLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(deleteRole.pending, (state) => {
         state.errorMessage = "";
@@ -112,16 +100,12 @@ const roleSlice = createSlice({
       .addCase(deleteRole.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.roleLoading = false;
-        toast("Role deleted successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Role deleted successfully.");
       })
       .addCase(deleteRole.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.roleLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(getRoleWithPermissions.pending, (state) => {
         state.errorMessage = "";
@@ -135,9 +119,7 @@ const roleSlice = createSlice({
       .addCase(getRoleWithPermissions.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.roleLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addRoleWithPermissions.pending, (state) => {
         state.errorMessage = "";
@@ -146,9 +128,7 @@ const roleSlice = createSlice({
       .addCase(addRoleWithPermissions.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.roleLoading = false;
-        toast("Role permission added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Role permission added successfully.");
       })
       .addCase(addRoleWithPermissions.rejected, (state, action) => {
         state.roleLoading = false;
@@ -159,9 +139,7 @@ const roleSlice = createSlice({
         if (payload?.data?.errors) {
           Object.values(payload.data.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -171,9 +149,7 @@ const roleSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       });
   },

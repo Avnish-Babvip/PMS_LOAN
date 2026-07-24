@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getAllAdminUsers } from "../../features/actions/adminuser";
 import Pagination from "../../components/Pagination";
 import TableSkeleton from "../../components/TableSkeleton";
@@ -18,28 +18,24 @@ const AdminUser = () => {
   const { adminUserData, adminUserLoading } = useSelector(
     (state) => state.adminUser,
   );
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const { roleData } = useSelector((state) => state.role);
-
   const [selectedUser, setSelectedUser] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-
   const page = Number(searchParams.get("page")) || 1;
   const searchQuery = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
   const role_id = searchParams.get("role_id") || "";
-
   const users = adminUserData?.data || [];
   const hasData = Array.isArray(users) && users.length > 0;
-
-  const roles =
-    Array.isArray(roleData) &&
-    roleData?.map((r) => ({
-      label: r.name,
-      value: r.name,
-    }));
-
-
+  const roles = Array.isArray(roleData?.data)
+    ? roleData?.data?.map((r) => ({
+        label: r.name,
+        value: r.name,
+      }))
+    : [];
 
   const updateParams = ({ page, search, status, role_id }) => {
     const params = {};
@@ -64,7 +60,7 @@ const AdminUser = () => {
   }, [openModal, openEditModal, page, searchQuery, status, role_id]);
 
   useEffect(() => {
-    dispatch(getAllRoles());
+    dispatch(getAllRoles({ status: 1, per_page: 100 }));
   }, []);
 
   useEffect(() => {
@@ -81,31 +77,30 @@ const AdminUser = () => {
           <h2 className="font-semibold text-gray-800">All Admin Users</h2>
 
           <div className="flex gap-3">
-                          <button
-  onClick={() => setOpenModal(true)}
-  className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
->
-  <span className="relative z-10 flex items-center gap-2">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4v16m8-8H4"
-      />
-    </svg>
+            <button
+              onClick={() => setOpenModal(true)}
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#B91C1C] to-[#991B1B] px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add New Admin User
+              </span>
 
-    Add New Admin User
-  </span>
-
-  <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-</button>
+              <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            </button>
 
             <FilterSelect
               label="Status"
@@ -196,33 +191,34 @@ const AdminUser = () => {
                     key={item.id}
                     className="border-b border-gray-100 hover:bg-gray-50 transition"
                   >
-                    <td className="ps-5 px-3 py-5 text-gray-700">
+                    <td className="ps-5 px-3 py-5 text-gray-700 whitespace-normal break-all">
                       {item.name || "—"}
                     </td>
 
-                    <td className="px-3 cursor-pointer py-5 text-gray-700 truncate max-w-[260px]">
+                    <td className="px-3 cursor-pointer py-5 text-gray-700 whitespace-normal break-all">
                       <span title={item.email}>{item.email || "—"}</span>
                     </td>
 
-                    <td className="px-3 py-5 text-gray-700 whitespace-nowrap">
+                    <td className="px-3 py-5 text-gray-700 whitespace-normal break-all">
                       {item.phone || "—"}
                     </td>
-               <td className="px-3 py-5 whitespace-nowrap">
-  <div className="flex flex-wrap gap-2">
-    {item?.roles?.map((role, index) => (
-      <span
-        key={index}
-        className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 border border-indigo-100"
-      >
-        {role}
-      </span>
-    ))}
-  </div>
-</td>
+                    <td className="px-3 py-5">
+                      <div className="flex flex-wrap gap-2">
+                        {item?.roles?.map((role, index) => (
+                          <span
+                            key={index}
+                            className="max-w-full break-words whitespace-normal rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700"
+                          >
+                            {role}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
                     <td className="px-3 py-5">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
-                          item.is_active ? "bg-green-100 text-green-600"
+                          item.is_active
+                            ? "bg-green-100 text-green-600"
                             : "bg-red-100 text-red-600"
                         }`}
                       >
@@ -232,7 +228,6 @@ const AdminUser = () => {
 
                     <td className="px-3 py-5">
                       <div className="flex justify-center gap-2">
-                  
                         <button
                           onClick={() => {
                             setOpenEditModal(true);
@@ -267,6 +262,10 @@ const AdminUser = () => {
         onClose={() => {
           setOpenModal(false);
           dispatch(setActiveSubTab("All User"));
+          navigate(".", {
+            replace: true,
+            state: null,
+          });
         }}
         roles={roles}
       />

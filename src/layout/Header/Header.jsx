@@ -13,6 +13,9 @@ export const Header = ({ setSidebarOpen }) => {
     "/admin": {
       title: "Dashboard",
     },
+    "/admin/change-password": {
+      title: "Change Password",
+    },
     "/admin/user": {
       title: "Admin Users List",
       placeholder: "Search name, username or email...",
@@ -31,8 +34,13 @@ export const Header = ({ setSidebarOpen }) => {
       title: "Bank List",
       placeholder: "Search bank name",
     },
-
-
+    "/admin/case": {
+      title: "Case List",
+      placeholder: "Applicant Name or Case UUID",
+    },
+    "/admin/agent-timelines": {
+      title: "Timeline List",
+    },
   };
 
   const location = useLocation();
@@ -172,9 +180,7 @@ function AccountSection({}) {
           <PiUserCircle size={24} className="text-lg" />
         </div>
 
-        <span className="hidden md:block">
-          Hi, {admin?.name|| "User"}
-        </span>
+        <span className="hidden md:block">Hi, {admin?.name || "User"}</span>
 
         <FiChevronDown
           className={`transition-transform duration-300 ${
@@ -199,19 +205,6 @@ function AccountSection({}) {
 
         {/* MENU ITEMS */}
         <div className="py-2">
-          <NavLink
-            to="profile"
-            onClick={() => setOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center px-5 py-2.5 text-sm transition-all ${
-                isActive
-                  ? "bg-emerald-50 text-brand-green font-medium"
-                  : "text-gray-700 hover:bg-gray-50"
-              }`
-            }
-          >
-            My Profile
-          </NavLink>
           <NavLink
             to="change-password"
             onClick={() => setOpen(false)}

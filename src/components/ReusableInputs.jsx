@@ -12,16 +12,23 @@ export const Input = ({
   rules = {},
   errors,
   disabled = false,
+  maxLength = 50,
+  minLength = 2,
 }) => {
   const isPassword = type === "password";
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
     <div>
-      <label className="text-gray-700 text-sm font-medium">{label}</label>
+      <label className="text-gray-700 text-sm font-medium">
+        {label}
+        {required && <span className="text-red-600"> *</span>}
+      </label>
 
       <div className="relative">
         <input
+          minLength={minLength}
+          maxLength={maxLength}
           type={isPassword && showPassword ? "text" : type}
           placeholder={placeholder}
           {...register(name, {
@@ -29,6 +36,19 @@ export const Input = ({
             ...rules,
           })}
           disabled={disabled}
+          onKeyDown={(e) => {
+            if (isPassword && e.key === " ") {
+              e.preventDefault();
+            }
+          }}
+          onPaste={(e) => {
+            if (isPassword) {
+              const pastedText = e.clipboardData.getData("text");
+              if (/\s/.test(pastedText)) {
+                e.preventDefault();
+              }
+            }
+          }}
           className={`
             w-full mt-1 rounded-lg text-sm
             px-3 py-2.5 pr-10 border transition-all
@@ -68,7 +88,9 @@ export const Textarea = ({
   disabled,
 }) => (
   <div>
-    <label className="text-gray-700 text-sm font-medium">{label}</label>
+    <label className="text-gray-700 text-sm font-medium">
+      {label} {required && <span className="text-red-600"> *</span>}
+    </label>
 
     <textarea
       placeholder={placeholder}
@@ -96,7 +118,9 @@ export const Select = ({
   errors,
 }) => (
   <div>
-    <label className="text-gray-700 text-sm font-medium">{label}</label>
+    <label className="text-gray-700 text-sm font-medium">
+      {label} {required && <span className="text-red-600"> *</span>}
+    </label>
 
     <select
       {...register(name, { required })}
@@ -127,7 +151,9 @@ export const SelectWithId = ({
   required,
 }) => (
   <div>
-    <label className="text-gray-700 text-sm font-medium">{label}</label>
+    <label className="text-gray-700 text-sm font-medium">
+      {label} {required && <span className="text-red-600"> *</span>}
+    </label>
 
     <select
       {...register(name, { required })}
@@ -151,56 +177,3 @@ export const SelectWithId = ({
     )}
   </div>
 );
-
-export const Checkbox = React.forwardRef(({ label, ...props }, ref) => (
-  <label className="flex items-center gap-2 text-sm text-gray-300">
-    <input
-      type="checkbox"
-      ref={ref}
-      {...props}
-      value={1}
-      className="accent-blue-600"
-    />
-    {label}
-  </label>
-));
-
-export const AttributeSelectWithId = ({
-  label,
-  name,
-  options = [],
-  register,
-  watch, // 👈 add this
-  errors,
-  required,
-}) => {
-  const value = watch ? watch(name) : undefined;
-
-  return (
-    <div>
-      <label className="text-gray-700 text-sm font-medium">{label}</label>
-
-      <select
-        value={value ?? ""} // ✅ make it controlled
-        {...register(name, { required })}
-        className="
-          w-full mt-1 rounded-lg p-2.5 text-sm
-          bg-white border border-gray-300
-          text-gray-800 focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none
-        "
-      >
-        <option value="">Select {label}</option>
-
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-
-      {errors?.[name] && (
-        <p className="text-red-500 text-xs mt-1">{label} is required</p>
-      )}
-    </div>
-  );
-};

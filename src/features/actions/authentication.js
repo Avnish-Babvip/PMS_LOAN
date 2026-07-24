@@ -19,7 +19,6 @@ export const adminLogin = createAsyncThunk(
   },
 );
 
-
 export const forgotPassword = createAsyncThunk(
   "admin/forgot-password",
   async (payload, { rejectWithValue }) => {
@@ -53,7 +52,7 @@ export const changePassword = createAsyncThunk(
   async (payload, { getState, rejectWithValue }) => {
     try {
       const loginToken = getState().authentication?.adminData?.token;
-      const { data } = await instance.post(`/admin/change-password`, payload, {
+      const { data } = await instance.post(`/admin/update-password`, payload, {
         headers: {
           Authorization: `Bearer ${loginToken}`,
         },
@@ -67,7 +66,7 @@ export const changePassword = createAsyncThunk(
 
 export const adminLogout = createAsyncThunk(
   "admin/Logout",
-  async (_, {getState, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
       const loginToken = getState().authentication?.adminData?.token;
       const { data } = await instance.post(
@@ -108,5 +107,3 @@ export const updateAdminProfile = createAsyncThunk(
     }
   },
 );
-
-

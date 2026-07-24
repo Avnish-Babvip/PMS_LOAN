@@ -5,23 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { Input, SelectWithId } from "../../ReusableInputs";
 import { Spinner } from "../../Loader/Spinner";
 import { addAgent } from "../../../features/actions/agent";
+import { useEffect } from "react";
 
-const AddAgentModal = ({
-  isOpen,
-  onClose,
-  roles
-}) => {
+const AddAgentModal = ({ isOpen, onClose, roles }) => {
   const dispatch = useDispatch();
 
-
-  const { adminUserLoading } = useSelector(
-    (state) => state.adminUser,
-  );
+  const { adminUserLoading } = useSelector((state) => state.adminUser);
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -34,8 +29,7 @@ const AddAgentModal = ({
     },
     validate: {
       hasUppercase: (value) =>
-        /[A-Z]/.test(value) ||
-        "Must contain at least one uppercase letter",
+        /[A-Z]/.test(value) || "Must contain at least one uppercase letter",
 
       hasSpecialChar: (value) =>
         /[^A-Za-z0-9]/.test(value) ||
@@ -47,17 +41,25 @@ const AddAgentModal = ({
     dispatch(addAgent(data))
       .unwrap()
       .then(() => {
+        reset();
         onClose();
       });
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      reset();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <form
+        autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[95vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl overflow-hidden"
       >
         {/* Header */}
         <div className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-r from-[#0F172A] via-[#111827] to-[#1E293B] px-8 py-6">
@@ -70,9 +72,7 @@ const AddAgentModal = ({
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-white">
-                  Add Agent
-                </h2>
+                <h2 className="text-2xl font-bold text-white">Add Agent</h2>
 
                 <p className="mt-1 text-sm text-gray-300">
                   Create a new agent account
@@ -123,6 +123,14 @@ const AddAgentModal = ({
                 errors={errors}
               />
 
+              <SelectWithId
+                label="Assign Role"
+                name="role"
+                options={roles}
+                register={register}
+                required
+                errors={errors}
+              />
               <Input
                 label="Password"
                 type="password"
@@ -141,18 +149,8 @@ const AddAgentModal = ({
                 required
                 rules={{
                   validate: (value) =>
-                    value === password ||
-                    "Passwords do not match",
+                    value === password || "Passwords do not match",
                 }}
-                errors={errors}
-              />
-
-              <SelectWithId
-                label="Assign Role"
-                name="role"
-                options={roles}
-                register={register}
-                required
                 errors={errors}
               />
 
@@ -165,13 +163,9 @@ const AddAgentModal = ({
                   {...register("status")}
                   className="w-full text-gray-700 rounded-xl border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-[#79BF28]"
                 >
-                  <option value={1}>
-                    Active
-                  </option>
+                  <option value={1}>Active</option>
 
-                  <option value={0}>
-                    Inactive
-                  </option>
+                  <option value={0}>Inactive</option>
                 </select>
               </div>
             </div>
@@ -211,11 +205,7 @@ const AddAgentModal = ({
               type="submit"
               className="flex min-w-[180px] items-center justify-center rounded-2xl bg-gradient-to-r from-[#79BF28] to-[#5ea51f] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl"
             >
-              {adminUserLoading ? (
-                <Spinner />
-              ) : (
-                "Create Agent"
-              )}
+              {adminUserLoading ? <Spinner /> : "Create Agent"}
             </button>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { instance } from "../../services/axiosInterceptor";
 export const getAllForms = createAsyncThunk(
   "admin/forms",
   async (
-    { search, status, per_page, page, loan_type, id },
+    { search, status, per_page, page, id },
     { getState, rejectWithValue },
   ) => {
     try {
@@ -21,9 +21,6 @@ export const getAllForms = createAsyncThunk(
       // // ✅ Add status filter
       if (status !== "" && status !== undefined) {
         params.append("status", status);
-      }
-      if (loan_type !== "" && loan_type !== undefined) {
-        params.append("loan_type", loan_type);
       }
 
       const link = `/admin/banks/${id}/forms?${params.toString()}`;

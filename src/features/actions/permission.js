@@ -10,8 +10,8 @@ export const getAllPermissions = createAsyncThunk(
 
       const params = new URLSearchParams();
 
-      params.append("page", page||1);
-      params.append("per_page", per_page || 10);
+      params.append("page", page || 1);
+      params.append("per_page", per_page || 30);
 
       const link = `/admin/permissions?${params.toString()}`;
 

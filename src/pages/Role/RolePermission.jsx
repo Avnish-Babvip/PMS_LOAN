@@ -2,13 +2,8 @@ import { useEffect, useState } from "react";
 import { FiEye, FiTrash2 } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import TableSkeleton from "../../components/TableSkeleton";
-import {
-  deleteRole,
-  getRoleWithPermissions,
-} from "../../features/actions/role";
-import DeleteModal from "../../components/Modal/Delete";
+import { getRoleWithPermissions } from "../../features/actions/role";
 import { useParams } from "react-router-dom";
-import AddRolePermissionModal from "../../components/Modal/Role/AddRolePermission";
 
 const RolePermission = () => {
   const dispatch = useDispatch();
@@ -19,21 +14,15 @@ const RolePermission = () => {
   const data = rolePermissionData?.permissions || [];
   const hasData = Array.isArray(data) && data.length > 0;
 
-  const [selected, setSelected] = useState({});
-  const [openModal, setOpenModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
   useEffect(() => {
-    if (!openModal && !openDeleteModal) {
-      dispatch(getRoleWithPermissions(id));
-    }
-  }, [openModal, openDeleteModal]);
+    dispatch(getRoleWithPermissions(id));
+  }, []);
 
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800">
             All Permissions : {role} (Role)
           </h2>
@@ -45,7 +34,7 @@ const RolePermission = () => {
             <thead className="bg-gray-50 text-gray-500">
               <tr>
                 <th className="text-left ps-5  px-3 py-3 w-[160px]">Name</th>
-                <th className="text-center px-3 py-3 w-[120px]">Action</th>
+                {/* <th className="text-center px-3 py-3 w-[120px]">Action</th> */}
               </tr>
             </thead>
 
@@ -55,7 +44,7 @@ const RolePermission = () => {
                 <TableSkeleton
                   rows={5}
                   columns={[{ width: "w-32 h-4" }]}
-                  actionColumn
+                  actionColumn={false}
                   actionCount={1}
                   actionWidth="w-8 h-8"
                 />
@@ -84,20 +73,6 @@ const RolePermission = () => {
                     <td className="capitalize ps-5 px-3 py-5 text-gray-700">
                       {item.name || "—"}
                     </td>
-
-                    <td className="px-3 py-5">
-                      <div className="flex justify-center gap-2">
-                        <button
-                          onClick={() => {
-                            setOpenDeleteModal(true);
-                            setSelected({ id: item?.id });
-                          }}
-                          className="p-2 px-3  bg-red-100 text-red-500 rounded-lg hover:bg-red-200"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 ))
               )}
@@ -105,28 +80,6 @@ const RolePermission = () => {
           </table>
         </div>
       </div>
-
-      <AddRolePermissionModal
-        isOpen={openModal}
-        onClose={() => {
-          setOpenModal(false);
-        }}
-        permissionNames={data}
-      />
-      <DeleteModal
-        isOpen={openDeleteModal}
-        onClose={() => setOpenDeleteModal(false)}
-        title="Delete Role"
-        isLoading={roleLoading}
-        message="Are you sure you want to delete this role? This action cannot be undone."
-        onConfirm={() => {
-          dispatch(deleteRole(selected.id))
-            .unwrap()
-            .then(() => {
-              setOpenDeleteModal(false);
-            });
-        }}
-      />
     </>
   );
 };

@@ -38,9 +38,7 @@ const agentSlice = createSlice({
       .addCase(getAllAgents.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.agentLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addAgent.pending, (state) => {
         state.errorMessage = "";
@@ -49,9 +47,7 @@ const agentSlice = createSlice({
       .addCase(addAgent.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.agentLoading = false;
-        toast("Agent added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Agent added successfully.");
       })
       .addCase(addAgent.rejected, (state, action) => {
         state.agentLoading = false;
@@ -62,9 +58,7 @@ const agentSlice = createSlice({
         if (payload?.errors) {
           Object.values(payload.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -74,9 +68,7 @@ const agentSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       })
       .addCase(editAgent.pending, (state) => {
@@ -86,16 +78,12 @@ const agentSlice = createSlice({
       .addCase(editAgent.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.agentLoading = false;
-        toast("Agent updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Agent updated successfully.");
       })
       .addCase(editAgent.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.agentLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       });
   },
 });

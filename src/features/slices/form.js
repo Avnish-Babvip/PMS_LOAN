@@ -49,9 +49,7 @@ const formSlice = createSlice({
       .addCase(getAllForms.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.formLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(getFormDetails.pending, (state) => {
         state.errorMessage = "";
@@ -62,9 +60,7 @@ const formSlice = createSlice({
       })
       .addCase(getFormDetails.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(uploadFormSheet.pending, (state) => {
         state.errorMessage = "";
@@ -73,10 +69,8 @@ const formSlice = createSlice({
       .addCase(uploadFormSheet.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.formLoading = false;
-         state.formDetailData = action.payload.data;
-        toast("File uploaded successfully.", {
-          description: formattedDate,
-        });
+        state.formDetailData = action.payload.data;
+        toast.success("File uploaded successfully.");
       })
       .addCase(uploadFormSheet.rejected, (state, action) => {
         state.formLoading = false;
@@ -87,9 +81,7 @@ const formSlice = createSlice({
         if (payload?.errors) {
           Object.values(payload.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -99,9 +91,7 @@ const formSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       })
       .addCase(editBasicDetails.pending, (state) => {
@@ -111,17 +101,13 @@ const formSlice = createSlice({
       .addCase(editBasicDetails.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.basicLoading = false;
-         state.formDetailData = action.payload.data;
-        toast("Basic details updated successfully.", {
-          description: formattedDate,
-        });
+        state.formDetailData = action.payload.data;
+        toast.success("Basic details updated successfully.");
       })
       .addCase(editBasicDetails.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.basicLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(editFormField.pending, (state) => {
         state.errorMessage = "";
@@ -130,46 +116,34 @@ const formSlice = createSlice({
       .addCase(editFormField.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.fieldLoading = false;
-        toast("Field details updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Field details updated successfully.");
       })
       .addCase(editFormField.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.fieldLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addFormField.pending, (state) => {
         state.errorMessage = "";
       })
       .addCase(addFormField.fulfilled, (state, action) => {
         state.errorMessage = "";
-        toast("Field added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Field added successfully.");
       })
       .addCase(addFormField.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(deleteFormField.pending, (state) => {
         state.errorMessage = "";
       })
       .addCase(deleteFormField.fulfilled, (state, action) => {
         state.errorMessage = "";
-        toast("Field deleted successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Field deleted successfully.");
       })
       .addCase(deleteFormField.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       });
   },
 });

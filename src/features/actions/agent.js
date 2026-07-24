@@ -3,15 +3,18 @@ import { instance } from "../../services/axiosInterceptor";
 
 export const getAllAgents = createAsyncThunk(
   "admin/admin-users",
-  async ({ search, status, page, role_id }, { getState, rejectWithValue }) => {
+  async (
+    { search, status, page, role_id, per_page },
+    { getState, rejectWithValue },
+  ) => {
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
 
       const params = new URLSearchParams();
 
-      params.append("page", page);
-      params.append("per_page", 1);
+      params.append("page", page || 1);
+      params.append("per_page", per_page || 10);
 
       if (search) params.append("search", search);
 
@@ -45,16 +48,12 @@ export const addAgent = createAsyncThunk(
     try {
       const loginToken = getState().authentication?.adminData?.token;
 
-      const { data } = await instance.post(
-        `/admin/agents`,
-        payload,
-        {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${loginToken}`,
-          },
+      const { data } = await instance.post(`/admin/agents`, payload, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${loginToken}`,
         },
-      );
+      });
 
       return data;
     } catch (error) {
@@ -71,16 +70,12 @@ export const editAgent = createAsyncThunk(
     try {
       // ✅ Get token directly from store
       const loginToken = getState().authentication?.adminData?.token;
-      const { data } = await instance.put(
-        `/admin/agents/${id}`,
-        payload,
-        {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${loginToken}`,
-          },
+      const { data } = await instance.put(`/admin/agents/${id}`, payload, {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${loginToken}`,
         },
-      );
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message || "Failed ");

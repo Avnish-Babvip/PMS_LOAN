@@ -13,6 +13,7 @@ import agent from "./slices/agent";
 import bank from "./slices/bank";
 import form from "./slices/form";
 import caseSlice from "./slices/case";
+import timeline from "./slices/timeline";
 
 const rootReducer = combineReducers({
   references,
@@ -25,11 +26,12 @@ const rootReducer = combineReducers({
   bank,
   form,
   caseSlice,
+  timeline,
 });
 
 // Redux-persist configuration
 const persistConfig = {
-  key: "AONE ADMIN",
+  key: "PMS",
   version: 1,
   storage,
   transforms: [

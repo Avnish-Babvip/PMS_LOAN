@@ -43,9 +43,7 @@ const permissionSlice = createSlice({
       .addCase(getAllPermissions.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.permissionLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(addPermission.pending, (state) => {
         state.errorMessage = "";
@@ -54,9 +52,7 @@ const permissionSlice = createSlice({
       .addCase(addPermission.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.permissionLoading = false;
-        toast("Permission added successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Permission added successfully.");
       })
       .addCase(addPermission.rejected, (state, action) => {
         state.permissionLoading = false;
@@ -67,9 +63,7 @@ const permissionSlice = createSlice({
         if (payload?.data?.errors) {
           Object.values(payload.data.errors).forEach((messages) => {
             messages.forEach((msg) => {
-              toast.error(msg, {
-                description: formattedDate,
-              });
+              toast.error(msg);
             });
           });
 
@@ -79,9 +73,7 @@ const permissionSlice = createSlice({
           const message = payload?.message || payload || "Failed";
           state.errorMessage = message;
 
-          toast.error(message, {
-            description: formattedDate,
-          });
+          toast.error(message);
         }
       })
       .addCase(editPermission.pending, (state) => {
@@ -91,16 +83,12 @@ const permissionSlice = createSlice({
       .addCase(editPermission.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.permissionLoading = false;
-        toast("Permission details updated successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Permission details updated successfully.");
       })
       .addCase(editPermission.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.permissionLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       })
       .addCase(deletePermission.pending, (state) => {
         state.errorMessage = "";
@@ -109,16 +97,12 @@ const permissionSlice = createSlice({
       .addCase(deletePermission.fulfilled, (state, action) => {
         state.errorMessage = "";
         state.permissionLoading = false;
-        toast("Permission deleted successfully.", {
-          description: formattedDate,
-        });
+        toast.success("Permission deleted successfully.");
       })
       .addCase(deletePermission.rejected, (state, action) => {
         state.errorMessage = action.payload || "Failed";
         state.permissionLoading = false;
-        toast(action.payload, {
-          description: formattedDate,
-        });
+        toast.error(action.payload);
       });
   },
 });
